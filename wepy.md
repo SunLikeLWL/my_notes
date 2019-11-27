@@ -112,3 +112,17 @@ $invoke
 
 
 其中，@表示事件修饰符，customEvent表示事件名称，.user表示事件后缀
+
+
+ 目前总共有三种事件后缀
+
+ .default：绑定小程序冒泡事件，比如bindtap，default后缀可以省略不写
+
+ .stop 绑定小程序捕获事件，如catchtap
+
+ .user：绑定用户自定义组件事件，通过$emit触发。
+ 注意，如果用了自定义事件，则events对应的监听函数不会再执行。
+
+
+
+ 

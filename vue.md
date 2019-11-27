@@ -145,4 +145,48 @@ dispatch方法： 一个函数，发送action到state
 6、v-leave-to：
 定义离开过渡的结束状态。在离开过渡被触发之后下一帧生效（与此同时v-leave被删除），在过渡/动画完成之后移除。
 
+q
+
+
+### mixins
+
+
+mixins 就是定义一部分公共的方法或者计算属性，然后混入到各个组件中使用，方便管理与
+统一修改
+
+
+
+
+
+### MVVM
+
+Model
+View
+ViewModel（DOM Listeners + Data Binding）
+
+
+
+1、计算属性
+在computed属性对象中定义计算属性的方法
+在页面中使用{{方法名}}来显示计算的结果
+
+2、监视属性：
+通过vm对象的$watch活watch配置来监视指定的属性
+当属性改变时，回调函数自动调用，在函数内部进行计算
+
+3、计算属性高级
+通过getter和setter实现对属性的显示和监视
+计算属性存在缓存，多次读取只执行一次getter计算
+
+
+### 双向数据绑定
+
+1、vue本身只是监视了data最外层数据的变化，没有监视内部数据的变化
+2、vue重写了数组中的一系列改变数组内部数据的方法(push，pop，shift
+unshift,reverse,merge)
+  先调用原生方法，在更新界面
+
+  this.persons.splice(index,1);
+
+  this.persons[index]  = onjP;
 
