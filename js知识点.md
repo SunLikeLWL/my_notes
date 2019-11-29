@@ -130,7 +130,176 @@ XSS是一种在web应用中的计算机安全漏洞，是由于web应用的输�
 
 
 
+## 8、设计模式
+
+是一套被反复使用、思想成熟、经过分类和无数实战设计检验的总结的。
+使用设计模式是为了让系统代码可重用、可扩展、可解耦、更容易被人理解
+且能保证代码可靠性。设计模式使代码开发真正工程化。
 
 
+
+## 9、XMLHttpRequest实例
+
+var xmlhttp = null;
+function loadXMLDoc(url){
+    if(window.XMLHttpRequest){
+        xmlhtpp = new XMLHttpRequest();
+    }
+    else if(window.ActiveXObject){
+        xmlhttp = new ActiveXObject("Mycrosoft.XMLHTTP");
+    }
+
+    if(xmlhttp){
+        xmlhttp.onreadystatechange =  stage_change;
+        xmlhttp .open("get",url,true);
+        xmlhttp.send(null);
+    }
+    else{
+        alert("Your brower does not suport XMLHTTP");
+    }
+}
+
+function state_change(){
+    if(xmlhttp.readyState==4){
+        if(xmlhttp.status == 200){
+
+        }
+    }
+    else{
+
+    }
+}
+
+
+## 10、库和框架
+
+库：库是更多是一个封装好的特定的集合，提供给开发者使用，
+而且是特定于某一方面的集合（方法和函数），库没有控制权，
+控制权在使用者手中，在库中查询需要的功能在自己的应用中使用，
+我们可以从封装的角度理解库；
+
+框架：框架顾名思义就是一套架构，会基于自身的特点向用户
+提供一套相当于叫完整的解决方案，而且控制权的在框架本身，
+使用者要找框架所规定的某种规范进行开发。
+
+在实际中，像angular、backbone、vue就属于框架，
+而jQuery、React、underscore就是库，在前者中我们完全可以自由的使用后者
+，同时也可以没有前者的基础之上使用后者，都是很自由，
+控制权始终在我们的手中，但是使用框架时候就必须按照它的规范来进行模块化的开发；
+
+
+React和react-router, react-redux结合起来才叫框架，本身只是充当一个前端渲染的库而已
+
+
+
+## 11、原型
+
+1.在JS里，万物皆对象。方法（Function）是对象，方法的原型(Function.prototype)是对象。因此，它们都会具有对象共有的特点。
+即：对象具有属性__proto__，可称为隐式原型，一个对象的隐式原型指向构造该对象的构造函数的原型，这也保证了实例能够访问在构造函数原型中定义的属性和方法。
+
+2.方法(Function)
+方法这个特殊的对象，除了和其他对象一样有上述_proto_属性之外，还有自己特有的属性——原型属性（prototype），这个属性是一个指针，指向一个对象，这个对象的用途就是包含所有实例共享的属性和方法（我们把这个对象叫做原型对象）。原型对象也有一个属性，叫做constructor，这个属性包含了一个指针，指回原构造函数。
+
+
+
+
+## 12、异步加载脚本
+
+function loadScript(url){
+    <!-- 获取head节点 -->
+    var head = documnet.head|| documnet.getElementByTagName("head")[0];
+
+    <!-- 创建script标签 -->
+    var script = document.createElemet("script");
+   
+   <!-- 给script标签赋值 -->
+    script.src = url;
+
+  <!-- 监听script脚本内容加载完成 -->
+    script.onload = script.onreadystatechange = function(){
+        if(!this.readyState || this.readyState == 'loaded' || this.readyState=='complete'){
+            //func();
+            script.onload() = script.onreadystatechange = null;
+        }
+    }
+
+    <!-- 将脚本插入到head标签内 -->
+    head.insertBefore(script,0)
+}
+
+
+
+
+
+## 13、javascript调用堆栈
+
+### 执行上下文
+  当前javascript代码被解析和执行是所在环境的抽象概念，
+  javascript中运行任何的代码都是在执行上下文中运行。
+
+
+  ### 分类
+
+  #### 全局执行上下文
+       这是默认的，最基础的执行上下文。
+       1、创建全局对象，在浏览器中这个全局对象就是window对象；
+       2、将this指针指向这个全局对象
+       一个程序只存在一个执行上下文
+
+
+ #### 函数执行上下文
+      每次函数调用时，都会为改函数创建一个新的执行上下文。每个函数
+      否拥有执行上下文，但是只有在函数被调用的时候才会被创建。一个程序
+      中可以存在多个函数执行上下文，这些函数执行上下文按照特定的顺序
+      执行一系列的步骤；
+
+
+
+#### Eval函数执行上下文
+     运行eval函数中的代码也获得了自己的执行上下文，Eval方法是在运行时对脚本进行解释执行，
+     而普通的javascript会有一个预处理的过程。所以会有一些性能上的损失；eval也存在一个安全问题，
+     因为他可以执行传给他的任何字符串，所以永远不要传入字符串或者不明来历和不收信任来源的参数
+
+
+
+
+### 执行栈
+执行栈，也叫调用栈，具有LIFO（Last In First Out后进先出）结构，用于存储在代码执行期间创建的
+所有执行上下文。
+
+
+当Javascript引擎首次读取脚本时，会创建一个全局执行上下文并将其Push到当前执行栈中。
+每当发生函数调用时，引擎都会为改函数创建一个新的执行上下文并Push到当前执行栈的栈顶。
+
+引擎会运行执行栈中的Pop出，上下文控制权讲转到当前执行栈的下一个执行上下文。
+
+
+
+
+
+### 词法环境Lexical Environment
+
+词法环境是一种规范类型，基于ECMAScript代码的词法嵌套结构来定义标识符与特定变量和函数的关联关系
+词法环境由环境记录（environment record）和可能为空引用（null）的外部词法环境组成
+
+
+#### 组成
+
+   1、环境记录（environment record）
+   存储变量和函数声明的实际位置；
+   2、对外环境的引用
+   意味着他可以访问其外部词法环境
+
+
+
+#### 词法环境
+    
+     全局环境（在全局执行上下文中）是一个没有外部环境词法的词法环境。全局环境的外部环境应用为null。
+     他拥有一个全局对象，以及相关的方法和属性以及任何用户自定义的全局变量，this的值指向这个全局对象
+
+
+#### 函数环境 
+     用户在函数中定义的变量被存储在环境记录中，包含了arguments对象。对外部环境的引用可以是全局环境，
+     也可以是包含在内部函数的外部函数环境
 
 
