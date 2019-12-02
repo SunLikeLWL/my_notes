@@ -18,7 +18,7 @@ actions 响应在view上的用户输入导致的状态变化
 
  
 
- Vuex可以帮助我们刮管理共享状态，并附带了跟多的概念和框架
+ Vuex可以帮助我们管理共享状态，并附带了跟多的概念和框架
 
 
  如果在模块化构建系统中，请确保在开头调用了Vue.use();
@@ -64,7 +64,7 @@ Vuex允许我们在store中定义"getter"（可以认为是store的计算属性�
 
 Getter接受一个state作为第一个参数
 
-const  store  =new Vuex.Store({
+const  store = new Vuex.Store({
     state:{
         ...
     },
@@ -118,7 +118,7 @@ context.commit 提交一个mutation，或者通过context.state和context.getter
 
 actions:{
     increment({conmit}){
-        conmit("increment)
+        commit("increment)
     }
 }
 
@@ -165,3 +165,33 @@ const store = new Vuex.Store({
 })
 
 
+
+单一状态树
+
+const store = new Vuex.Store({
+    state:{
+        count: 0
+    },
+    mutations:{
+        increment:state=>state.count++;
+        decrement:state=>state.count--;
+    }
+})
+
+
+new Vue({
+    el:"#app",
+    computed:{
+        count(){
+            return store.state.count;
+        }
+    },
+    methods:{
+        increment(){
+            store.commit("increment");
+        }
+        decrement(){
+            store.comnit("decrement);
+        }
+    }
+})

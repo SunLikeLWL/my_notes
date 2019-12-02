@@ -1,5 +1,6 @@
-1、前端高级进阶
-1、调用堆栈
+# 前端高级进阶
+
+##  1、调用堆栈
 
 执行上下文就是当前javascript代码被解析和执行是所在环境的抽象概念，javascript中运行任何代码都是在执行上下文中运行的。
 a、全局上下文
@@ -8,16 +9,238 @@ c、Eval函数执行上下文
 
 执行栈，也叫调用栈，具有LIFO(Last In First Out)结构，用于存储在代码执行期间创建的所有执行上下文；
 
-当
+当javascript引擎首次读取脚本时，会创建一个全局执行上下文并将其Push到当前执行栈中。每当发生函数调用
+时，引擎就会为该函数创建一个新的执行上下文并push到当前执行栈的栈顶；
 
-2、作用域闭包
-3、this 全面解析
-4、深浅拷贝原理
-5、原型 Prototype
-6、高阶函数
-7、事件机制
+引擎会运行执行上下文在执行栈栈顶的函数，根据LIFO规则，当前函数运行完成后，其对应的执行上下文将会从执行栈中
+pop出，上下文控制权转到当前执行栈的下一个执行上下文；
+
+
+
+
+
+
+## 2、作用域闭包
+
+### 概念
+ 函数与对其状态即词法环境的应用共同构成闭包(closure)。也就是说，闭包可以让你从内部函数访问外部函数作用域
+。在javascript，函数在每次创建是生成闭包
+
+
+
+
+
+## 3、this 全面解析
+
+### 前言
+this的绑定和函数声明的位置没有任何关系，只取决于函数的调用方式。
+
+### 总结
+函数被调用时发生this绑定，this指向什么完全取决于函数在哪里被调用。
+
+### this的绑定规则
+
+1、默认绑定
+ 
+ 独立函数调用：独立函数调用时的this使用默认绑定规则，默认绑定规则下的this指向window(全局对象)
+ 严格模式：this无法使用默认绑定，this会绑定undefined
+
+
+2、隐式绑定
+
+当函数引用有上下文对象的时，隐式绑定规则会把函数中的this绑定到这个上下文对象
+
+ var obj = {
+     name:"xixi",
+     foo:function(){
+         console.log(this.name)
+     }
+ }
+
+obj.foo();
+
+对象属性引用链中只有上一层或者说最后一层在再调用中起作用
+
+obj.obj1.foo();
+
+ var obj = {
+     name:"xixi",
+     obj1:{
+         name:"wenwen",
+         foo:function(){
+            console.log(this.name)
+        }
+     }
+ }
+
+隐式丢失： 被隐式绑定的函数会丢失绑定对象，而应用默认绑定，把this绑定到全局对象或者undefined(严格模式)上。
+
+
+ 
+var a = "global";
+var obj = {
+    a:"obj",
+    foo:function(){
+        console.log(this.a);//global
+    }
+}
+var bar = obj.foo;//函数别名
+bar(); 
+
+
+ 
+ var a = "global";
+ var obj = {
+     a: "obj",
+     foo:function(){
+         console.log(this.a);//global
+     }
+ }
+var bar = obj.foo;//函数别名
+function doFoo(fn){
+    fn();
+}
+doFoo(bar); //global
+
+setTimeout(obj.foo,3000)
+
+3、显示绑定
+
+通过call()和apply()方法。第一个参数是一个对象，在调用函数时将这个对象绑定到this上，称之为显示绑定
+
+4、new绑定
+使用new来调用函数，或者说发生构造函数调用时，会自动执行下面的操作：
+ 创建（或者说构造）一个新的对象
+ 这个新的对象被执行[[原型]]链接
+ 这个新对象会绑定到函数调用的this
+ 如果函数没有返回其他对象，那么new表达式中的函数调用会自动返回这个新对象
+
+优先级：
+new > call/apply > 隐式 > 默认
+
+
+
+
+## 4、深浅拷贝原理
+### 浅拷贝
+只拷贝对象的基本类型值，并不复杂引用类型的值而是引用他的指针，
+var a = {
+    name: 12
+}
+var b = a;
+b只是引用a的指针
+
+
+### 深拷贝
+深拷贝可以拥有一个对象所有属性和方法，实现真正的"独立自主"，不引用原来对
+象的指针，开辟新的内存空间，和原来的对象不会相互影响
+
+
+### 浅拷贝实现方法
+
+  1、Object.assign();
+
+   拷贝的只是属性值,只实现第一层的深拷贝，而不能进行深层的深拷贝，所以这个方法属于浅拷贝
+
+  2、Object.create();
+   这个方法创建了一个新的对象，使用现有的对象来提供新创建的对象的__proto__，实际上是地址引用，
+
+
+   3、扩展运算符等
+   let a = [1,2,3];
+   let b = [...a];
+   
+   只是基于基本类型值的引用，并没有开辟新的空间
+
+   
+
+
+  ### 深拷贝实现方法
+
+ 1、JSON.parse(JSON.stringify(obj));
+
+ 
+
+ 2、利用递归的方法和for in遍历属性进行深拷贝
+
+ function deepCopy(initialObj,copyObj){
+     var obj =  copy||{};
+     for(let i in initialObj){
+         var prop = initialObj[i];
+         if(typeof prop ==="obj"){
+             obj[i] = prop.constructor===Array?[]:{},
+             deepCopy(prop,obj[i]);
+         }
+         else{
+             obj[i] = prop;
+         }
+     }
+     return obj;
+ }
+
+
+
+
+## 5、原型 Prototype
+
+### 基本概念
+每个函数都有一个prototype属性。
+此属性是一个指针，能够指向一个对象，而且对象将会被构造函数创建的对象实例所共享，也就是会继承此对象
+### 总结:
+prototype所指向的对象是被构造函数所创建的对象实例所共用共享的。
+创建的对象实例有一个内部属性[[Prototype]]，他是一个指针，指向函数原型(prototype)指向的对象。
+
+
+
+
+## 6、高阶函数
+   
+   ### 高级函数
+   参数或者是函数返回值是函数的函数。
+
+   ### AOP面向切片编程
+   1、当需要使用某个公共函数时需要这个函数执行前添加自己的逻辑，
+   2、通常我们的做法不能是直接修改这个函数；
+   3、而是通过AOP的方法利用高级函数和原型链的特点处理
+
+
+   function say(name){
+       console.log(name)
+   }
+
+   function before(){
+       console.log("say前执行");
+   }
+
+   Function.prototype.beforeFn = function(){
+       return (...argd)=>{
+           before();
+           this(...args);
+       }
+   }
+
+   let beforeSay = say.beforeFn(before);
+
+   beforeSay("xixi")
+
+
+
+## 7、事件机制
+
+
+
+
 8、Event Loop 原理
+
+
+
+
+
 9、Promise 原理
+
+
+
+
 10、Async/Await 原理
 11、防抖/节流原理
 12、模块化详解
