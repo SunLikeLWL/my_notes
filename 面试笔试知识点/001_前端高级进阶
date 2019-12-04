@@ -1,6 +1,6 @@
 # 前端高级进阶
 
-##  1、调用堆栈
+##  1、调用堆栈  *******************************************************
 
 执行上下文就是当前javascript代码被解析和执行是所在环境的抽象概念，javascript中运行任何代码都是在执行上下文中运行的。
 a、全局上下文
@@ -20,7 +20,7 @@ pop出，上下文控制权转到当前执行栈的下一个执行上下文；
 
 
 
-## 2、作用域闭包
+## 2、作用域闭包  
 
 ### 概念
  函数与对其状态即词法环境的应用共同构成闭包(closure)。也就是说，闭包可以让你从内部函数访问外部函数作用域
@@ -30,7 +30,7 @@ pop出，上下文控制权转到当前执行栈的下一个执行上下文；
 
 
 
-## 3、this 全面解析
+## 3、this 全面解析 *******************************************************
 
 ### 前言
 this的绑定和函数声明的位置没有任何关系，只取决于函数的调用方式。
@@ -121,7 +121,7 @@ new > call/apply > 隐式 > 默认
 
 
 
-## 4、深浅拷贝原理
+## 4、深浅拷贝原理 *******************************************************
 ### 浅拷贝
 只拷贝对象的基本类型值，并不复杂引用类型的值而是引用他的指针，
 var a = {
@@ -181,7 +181,7 @@ b只是引用a的指针
 
 
 
-## 5、原型 Prototype
+## 5、原型 Prototype  
 
 ### 基本概念
 每个函数都有一个prototype属性。
@@ -193,7 +193,7 @@ prototype所指向的对象是被构造函数所创建的对象实例所共用�
 
 
 
-## 6、高阶函数
+## 6、高阶函数  *******************************************************
    
    ### 高级函数
    参数或者是函数返回值是函数的函数。
@@ -225,7 +225,7 @@ prototype所指向的对象是被构造函数所创建的对象实例所共用�
 
 
 
-## 7、事件机制
+## 7、事件机制 *******************************************************
    
    ### 事件
    文档或者浏览器窗口中发生的一些特定的交互瞬间，js和html的交互就是通过事件来实现的。
@@ -244,7 +244,7 @@ prototype所指向的对象是被构造函数所创建的对象实例所共用�
 
 
 
-## 8、Event Loop 原理
+## 8、Event Loop 原理  
  
  ### 概念
  Event Loop 即事件循环，是指浏览器或Node的一种解决javascript单线程运行时不会阻塞的一种
@@ -265,6 +265,16 @@ prototype所指向的对象是被构造函数所创建的对象实例所共用�
 受限的线性表
 
 
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
 
 
   
@@ -296,18 +306,177 @@ prototype所指向的对象是被构造函数所创建的对象实例所共用�
 *
 *
 *
-11、防抖/节流原理
-*
-*
-*
-*
-*
-*
-*
-*
-*
-*
-12、模块化详解
+## 11、防抖/节流原理  *******************************************************
+
+###  缘由
+
+在使用resize、scroll、mousemove等等事件时，会持续触发事件
+
+
+### 防抖  
+
+   防抖就是指触发事件后在n秒内函数只能执行一次，如果n秒内又触发了事件，则会重新计算函数执行时间。
+   
+
+   防抖函执行分为非立即执行和立即执行。
+
+
+   非立即执行：
+   function debouce(func,wait){
+       let timeout;
+       return function(){
+           let context = this;
+           let args = arguments;
+           if(timeout){
+               clearTimeout(timeout);
+           }
+           timeout = setTimeout(function(){
+             func.apply(context,args);
+           },wait)
+       }
+   }
+
+
+   立即执行：
+
+   function debouce(func,wait){
+       let timeout;
+       return function(){
+           let context = this;
+           let args = arguments;
+           if(timeout){
+               clearTimeout(timeout);
+           }
+           var callNow = !timeout;
+           timeout = setTimeout(function(){
+             func.apply(context,args);
+           },wait)
+
+           if(callNow){
+               func.apply(context,args);
+           }
+       }
+   }
+
+
+   ### 节流
+
+   节流就是指触发事件但是在n面内只执行一次函数。节流会稀释函数的执行频率。
+
+
+  时间戳：
+  function throttle(func,wait){
+      var previous = 0;
+      return function(){
+          let now = Date.now();
+          let context = this;
+          var args = arguments;
+          if(now-previous>wait){
+              func.apply(context,args);
+              previous = now;
+          }
+      }
+  }
+
+
+  function throttle(func,wait){
+      let timeout;
+      return function(){
+          let context = this;
+          let args = arguments;
+          if(!timeout){
+            setTimeout(function(){
+                 timeout = null;
+                 func.apply(context,args);      
+            },wait)
+          }
+      }
+  }
+
+
+
+ 
+## 12、模块化详解 *******************************************************
+
+
+### AMD
+
+ADM，Asynchtonous Module Definition，异步模块定义。他是一个浏览器端模块化开发规范。
+他不是原生支持的，所以使用AMD规范进行页面开发需要对应的库，也就是requireJS，AMD
+在推广的过程中对模块定义的范围话的产生
+
+#### require
+  用来引入模块的函数
+  1、解决js文件存在依赖关系时，被依赖的文件需要早于依赖他的文件加载到浏览器；
+  2、js加载的时候浏览器会阻塞渲染线程，加载文件越多，页面失去响应的时间越长。
+
+#### define
+用来定义模块的函数
+
+
+### CMD
+ CMD，common Module Definition，通用模块定义。CMD是在sea.js推广过程中产生的。在CMD规范中，一个模块就是一个文件。
+
+
+
+ ### Commonjs 
+
+ Nodejs是Commonjs规范的只要时间者。他有四个重要环境变量为模块化的实现提供支持：
+ module、export、require、global。
+
+ module.exports(不推荐使用exports)定义对外输出的API
+ require引用模块
+
+ 
+ #### 模块引用
+
+ const fs  = require("fs");
+ 
+ 步骤：
+ 1、如果是核心模块，如fs，则直接返回模块；
+ 
+ 2、如果是路径，则拼接成一个绝对路径，然后继续读取缓存require.cache再读取文件
+
+ 3、首次加载后的模块会在require.cache中，所以多次require，得到的对象是同一个对象（引用对象）
+
+ 4、在执行模块代码的时候，会将模块包装成一下模式，以便于作用域在模块范围之内
+
+ (function(exports,require,__filename,__dirname){
+    // Module
+ });
+
+ 5、包装之后的代码通过vm原生代码块的runThisContext()方法执行类，返回一个function对象。最后得到当前模块对象
+ 的exports、require方法、module以及文件定位中得到的完整文件路径和文件目录传递微这个函数执行。
+
+
+#### 模块定义
+
+function fn(){
+
+}
+exports.propName =  fn;
+
+module.exports = fn;
+
+
+一个module对象代表模块本身，exports是module的属性。一般通过exports上挂载属性即可定义导出，也可以直接给module.exports
+赋值来定义导出
+
+
+#### 模块标识
+    模块标识就是传递给require()方法的参数，可以是相对路径或者绝对路径，也可以是符合小驼峰命名的字符串。
+
+
+
+### ES6模块
+
+
+
+
+
+
+
+
 *
 *
 *
