@@ -509,7 +509,24 @@ module.exports = fn;
 *
 *
 *
-15、浏览器渲染原理
+
+
+## 15、浏览器渲染原理
+
+ 1、浏览器会解析Html/SVG/XHTML,CSS,javascript
+   分别生成DOM Tree，CSS规则树，通过DOM API 和CSSOM API来操作 DOM Tree 和CSS Rule Tree
+
+ 2、解析完成之后就是通过DOM API 和CSSOM API 来操作DOM Tree 和CSS Rule Tree.
+
+ 3、最终通过调用操作系统Native GUI的API绘制
+
+
+ 
+
+
+
+
+
 *
 *
 *
