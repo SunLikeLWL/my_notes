@@ -44,3 +44,24 @@
   REPL： 交互式运行环境
 
 
+
+
+### fs模块中的类很文件的基本信息
+
+1、stats.isFile   标准文件返回true
+
+2、statss.isDirectory 路径返回true
+
+3、stats.isBlockDevice 块设备
+
+4、stats.isCharacterDevice  字符设备
+
+5、stats.isFIFO 命令管道
+
+6、stats.isSocket unix套接字
+
+
+
+
+
+
