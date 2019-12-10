@@ -1,0 +1,15 @@
+{
+  "name": "dmeo",
+  "version": "1.0.0",
+  "description": "mode",
+  "main": "helloworld.js",
+  "dependencies": {
+    "mysql": "^2.17.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
