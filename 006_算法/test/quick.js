@@ -3,7 +3,7 @@
 var arr =[432,432,423,432,423,43,54,54,45];
 
 
-var quickSort = function(arr){
+var quick = function(arr){
     if(arr.length<1){
         return arr;
     }
@@ -24,8 +24,8 @@ var quickSort = function(arr){
         }
     }
 
-    return quickSort(left).concat([privot],quickSort(right))
+    return quick(left).concat([privot],quick(right))
 }
 
 
-console.log(quickSort(arr))
+console.log(quick(arr))
