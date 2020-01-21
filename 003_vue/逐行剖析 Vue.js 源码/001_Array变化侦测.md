@@ -209,3 +209,110 @@ methodsToPatch.forEach(function (method) {
 
 
 ```
+
+
+### 深度侦测
+
+ 深度侦测就是不但要侦测自身数据的变化，还有侦测数据中所有的子数据的变化
+
+```
+
+let arr = [
+  {
+    name:'NLRX'，
+    age:'18'
+  }
+]
+
+
+export class Observer {
+  value: any;
+  dep: Dep;
+
+  constructor (value: any) {
+    this.value = value
+    this.dep = new Dep()
+    def(value, '__ob__', this)
+    if (Array.isArray(value)) {
+      const augment = hasProto
+        ? protoAugment
+        : copyAugment
+      augment(value, arrayMethods, arrayKeys)
+      this.observeArray(value)   // 将数组中的所有元素都转化为可被侦测的响应式
+    } else {
+      this.walk(value)
+    }
+  }
+
+  /**
+   * Observe a list of Array items.
+   */
+  observeArray (items: Array<any>) {
+    for (let i = 0, l = items.length; i < l; i++) {
+      observe(items[i])
+    }
+  }
+}
+
+export function observe (value, asRootData){
+  if (!isObject(value) || value instanceof VNode) {
+    return
+  }
+  let ob
+  if (hasOwn(value, '__ob__') && value.__ob__ instanceof Observer) {
+    ob = value.__ob__
+  } else {
+    ob = new Observer(value)
+  }
+  return ob
+}
+
+
+
+
+### 数组新增侦测
+
+
+```
+methodsToPatch.forEach(function (method) {
+  // cache original method
+  const original = arrayProto[method]
+  def(arrayMethods, method, function mutator (...args) {
+    const result = original.apply(this, args)
+    const ob = this.__ob__
+    let inserted
+    switch (method) {
+      case 'push':
+      case 'unshift':
+        inserted = args   // 如果是push或unshift方法，那么传入参数就是新增的元素
+        break
+      case 'splice':
+        inserted = args.slice(2) // 如果是splice方法，那么传入参数列表中下标为2的就是新增的元素
+        break
+    }
+    if (inserted) ob.observeArray(inserted) // 调用observe函数将新增的元素转化成响应式
+    // notify change
+    ob.dep.notify()
+    return result
+  })
+})
+
+```
+
+
+
+### 不足之处
+
+let arr = [1,2,3]
+arr[0] = 5;       // 通过数组下标修改数组中的数据
+arr.length = 0    // 通过修改数组长度清空数组
+
+使用上述例子中的操作方法来修改数组是无法侦测到的。
+
+Vue新增了api： Vue.set(), Vue.get()
+
+
+
+
+
+
