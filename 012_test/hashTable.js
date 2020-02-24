@@ -1,0 +1,4 @@
+function hashTable(){
+    var table = [];
+    
+}
