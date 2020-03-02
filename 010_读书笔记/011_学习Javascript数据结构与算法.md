@@ -449,6 +449,335 @@ function Dictionary(){
 ## 散列表
 
 
+function hashTable(){
+    var table = [];
+    var loseloseHashCode = function(key){
+        var hash = 0;
+        for(var i=0;i<key.length;i++){
+            hash+=key.charCodeAt(i);
+        }
+        return hash%37;
+    }
+    this.put = function(key,value){
+        var position = loseloseHashCode(key);
+        console.log(position+"-"+key);
+        table[position] =  value;
+    }
+    this.get = function(key){
+        return table[loseloseHashCode(key)];
+    }
+    this.remove = function(key){
+        table[loseloseHashCode(key)] = undefined;
+    }
+    this.print = function(){
+        for(var i=0;i<table.length;i++){
+            if(table[i]!==undefined){
+                console.log(i+":"+table[i]);
+            }
+        }
+    }
+}
+
+
+var ValuePair = function(key,value){
+    this.key = key;
+    this.value = value;
+    this.toString = function(){
+        return '['+this.key+'-'+this.value+']';
+    }
+    this.put = function(key,value){
+        var position = loseloseHashCode(key);
+        if(table[position]==undefined){
+            table[position] = new LinkedList();
+        }
+        table[position].append(new ValuePair(key,value))
+    }
+    this.get = function(key){
+        var position = loseloseHashCode(key);
+        if(table[position]!==undefined){
+            var current = table[position].getHead();
+            while(current.next){
+                if(current.element.key===key){
+                    return current.element.value;
+                }
+                current= current.next;
+            }
+            if(current.element.key===key){
+                return current.element.value;
+            }
+        }
+        return undefined;
+    }
+    this.remove = function(key){
+        var position = loseloseHashCode(key);
+        if(table[position]!==undefined){
+            var curent = table[position].getHead();
+            while(current.next){
+                if(current.element.key===key){
+                    table[position].remove(current);
+                    if(table[position].isEmpty()){
+                        table[position] = undefined;
+                    }
+                    return true;
+                }
+                current = curent.next;
+            }
+            if(current.element.key===key){
+                table[position].remove(current.element);
+                if(table[position].isEmpty()){
+                    table[position]= undefined;
+                }
+                return true;
+            }
+        }
+        return false;  
+    }
+    this.put = function(key,value){
+        var position = loseloseHashCode(key);
+        if(table[position]==undefined){
+            table[position]  = new ValuePair(key,value);
+        }
+        else{
+            var index = ++position;
+            while(table[index]!=undefined){
+                index++;
+            }
+            table[index] = new ValuePair(key,value);
+        }
+    }
+    this.get = function(key){
+        var position = loseloseHashCode(key);
+        if(table[position]!==undefined){
+            if(table[position].key===key){
+                return table[position].value;
+            }
+            else{
+                var index = ++position;
+                while(table[index]===undefined||table[index].key!==key){
+                  index++;
+                }
+                if(table[index].key===key){
+                    return table[index].value;
+                }
+            }
+        }
+        return undefined;
+    }
+    this.remove = function(key){
+        var postion = loseloseHashCode(key);
+        if(table[postion]!==undefined){
+            if(table[position].key===key){
+                table[index] = undefined;
+            }
+            else{
+                var index = ++postion;
+                while(table[index]===undefined || table[index].key!==key){
+                    index++;
+                }
+                if(table[index].key===key){
+                    table[index] =undefined;
+                }
+            }
+        }
+    }
+}
+
+
+
+var dj2HashCode = function(key){
+    var hash = 5381;
+    for(var i=0;i<key.length;i++){
+        hash = hash*33+key.charCodeAt(i);
+    }
+    return hash% 1013;
+}
+
+
+## 第八章 树
+
+
+
+function BinarySearchTree(){
+    var Node = function(key){
+        this.key = key;
+        this.left = null;
+        this.right = null;
+    };
+    var root = null;
+    this.insert = function(key){
+        var newNode = new Node(key);
+        if(root === null){
+            root = newNode;
+        }
+        else{
+            insertNode(root,newNode);
+        }
+    }
+
+    var insertNode = function(node,newNode){
+        if(newNode.key<node.key){
+            if(node.left === null){
+                node.left = newNode;
+            }
+            else{
+                insertNode(node.left,newNode);
+            }
+        }
+        else{
+            if(node.right=== null){
+                node.right = newNode;
+            }
+            else{
+                insertNode(node.right,newNode);
+            }
+        }
+    }
+    // 中序遍历
+    this.inOrderTraverse = function(callback){
+        inOrderTraverseNode(root,callback);
+    }
+    var inOrderTraverseNode = function(node,callback){
+      if(node!==null){
+          inOrderTraverseNode(node.left);
+          callback(node.key);
+          inOrderTraverseNode(node.right,callback);
+      }
+    }
+
+    // 先序遍历
+    this.prePrderTraverse  = function(callback){
+        preOrderTraverseNode(root,callback);
+    }
+
+    var preOrderTraverseNode = function(node,callback){
+        if(node!==null){
+            callback(node.key);
+            preOrderTraverseNode(node.left,callback);
+            parOrderTraverseNode(node.rigth,callback);
+        }
+    }
+
+    // 后续遍历
+    this.postOrderTraverse = function(callback){
+        postOrderTraverseNode(root,callback);
+    }
+
+    var postOrderTraverseNode = function(node,callback){
+        if(node!==null){
+            postOrderTraverseNode = function(node,callback){
+                if(node!==null){
+                    postOrderTraverseNode(node.left,callback);
+                    postOrderTraverseNode(node.right,callback);
+                    callback(node.key);
+                }
+            }
+        }
+    }
+   
+    // 找树的最小值
+    this.min = function(){
+        return minNode(root);
+    }
+
+    var minNode = function(node){
+        if(node){
+            while(node&& node.left!==null){
+                node = node.left;
+            }
+            return node.key;
+        }
+        return null;
+    }
+
+    // 找树的最大值
+
+    this.max = function(){
+        return maxNode(root);
+    }
+
+    var maxNode = function(node){
+        if(node){
+            while(node&& node.right!==null){
+                node = node.right;
+            }
+            return node.key;
+        }
+        return null;
+    }
+
+    //  搜索一个特定的值
+     this.search = function(key){
+        return searchNode(root,key);
+     };
+
+     var searchNode = function(node,key){  
+         if(node===null){
+             return false;
+         }
+         if(key<node.key){
+             return searchNode(node.left,key);
+         }
+         else if(key>node.key){
+             return searchNode(node.right,key);
+         }
+         else{
+             return true;
+         }
+     }
+
+     this.remove = function(key){
+         root = removeNode(root,key);
+     }
+
+     var removeNode = function(node,key){
+        
+         if(node===null){
+             return null;
+         }
+         if(key<node.key){
+             node.left = removeNode(node.left,key);
+         }
+         else if(key>node.key){
+             node.right = removeNode(node.right,key);
+             return node;
+         }
+         else{
+             //  第一种情况，只有的一个叶节点
+             if(node.left===null&&node.right===null){
+                 node = null;
+                 return node;
+             }
+            //  第二种情况，只有一个子节点的节点
+             else if(node.left === null){
+               node = node.right;
+               return node;
+             }
+             else if(node.right===null){
+                 node  = node.left;
+                 return node;
+             }
+            //  第三种情况，有两个子节点的节点
+             var aux  = findMinNode(node.right);
+             node.key = aux.key;
+             node.right = removeNode(node.right,aux.key);
+             return node;
+
+         }
+     }
+} 
+
+
+
+
+
+
+
+## 第九章 图
+
+
+
+
+
 
 
 
