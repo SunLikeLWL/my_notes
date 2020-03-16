@@ -3,7 +3,9 @@
 
  ## 前言
 
- 对于Object数据我们使用的是JS提供的对象原型上的方法Object.defineProperty，而这个方法是对象原型上的，所以Array无法使用这个方法，所以我们需要对Array型数据设计一套另外的变化侦测机制。
+ 对于Object数据我们使用的是JS提供的对象原型上的方法Object.defineProperty，
+ 而这个方法是对象原型上的，所以Array无法使用这个方法，
+ 所以我们需要对Array型数据设计一套另外的变化侦测机制。
 
 
 ### 
@@ -168,7 +170,7 @@ function defineReactive (obj,key,val) {
 }
 
 /**
- * 尝试为value创建一个0bserver实例，如果创建成功，直接返回新创建的Observer实例。
+ * 尝试为value创建一个Observer实例，如果创建成功，直接返回新创建的Observer实例。
  * 如果 Value 已经存在一个Observer实例，则直接返回它
  */
 
@@ -266,6 +268,7 @@ export function observe (value, asRootData){
   }
   return ob
 }
+
 
 
 
