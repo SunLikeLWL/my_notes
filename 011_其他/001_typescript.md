@@ -219,7 +219,14 @@ let {x,...rest} = a;
 rest;//{y:34,z:56};
 
 
-3、属性命名
+3、属性重命名
+let o = {
+    x:1,
+    y:2,
+    z:3
+}
+
+
 
 
 
@@ -299,4 +306,269 @@ function addPeople(person:Person){
 可选属性在应用“options bags”模式是很常用，即给函数传入的参数对象
 中只有部分属性赋值了。
 
+
+
+interface Car{
+    brand?:string,
+    name:string
+}
+
+function createCar(car:Car):{brand:string;name:string}{
+    let newCar = {brand:'BMW',name:'宝马'};
+    if(car.brand){
+        newCar.brand = car.brand;
+    }
+    if(car.name){
+        newCar.name = car.name;
+    }
+    return newCar;
+}
+
+
+let myCar = createCar({name:"宝马"})
+
+
+带可选属性的好处
+1、是可以对存在的属性进行预定义；
+2、可以捕获引用了不存在的属性是的错误
+
+
+
+## 只读属性
+
+一些对象属性只能在对象刚刚创建的时候修改其值
+
+
+interface Point{
+    readonly x: number;
+    readonly y: number;
+}
+
+
+let p1:Point = {
+    x:1,y:2
+}
+
+p1.x = 3;//error
+
+
+
+readonly vs const
+
+最简单判断该用readonly还是const的方法是看要把它做为变量使用还是做为一个属性。
+ 做为变量使用的话用 const，若做为属性则使用readonly。
+
+
+
+## 额外的属性检查
+
+对象字面量会被特殊对待而且会经过 额外属性检查，当将它们赋值给变量或作为参数传递的时候。 如果一个对象字面量存在任何“目标类型”不包含的属性时，你会得到一个错误。
+
+interface SquareConfig {
+    color?: string;
+    width?: number;
+}
+
+function createSquare(config: SquareConfig): { color: string; area: number } {
+    // ...
+}
+
+let mySquare = createSquare({ colour: "red", width: 100 });
+// error: 'colour' not expected in type 'SquareConfig'
+
+
+
+
+// 可以带有任意数量的属性：
+interface SquareConfig {
+    [propName: string]: any;
+}
+
+
+
+## 函数类型
+
+ 接口能够描述javascript中对象拥有的各种各样的外形。除了描述带有属性的普通对象外，接口也可以描述函数类型。
+
+ 为了使接口表示函数类型，我们需要给接口定义一个调用签名。他就像一个只有参数列表和返回值类型的函数定义。参数列表里的每个参数都需要名字和类型
+
+
+
+ interface SearchFunc {
+  (source: string, subString: string): boolean;
+}
+
+
+let mySearch: SearchFunc;
+mySearch = function(source: string, subString: string) {
+   
+}
+
+对于函数类型的类型检查来说，函数的参数名不需要与接口里定义的名字相匹配
+
+
+
+
+## 可索引的类型
+
+与使用接口描述的类型差不多，我们也可以描述那些“通过索引得到”的类型
+
+interface StringArray {
+  [index: number]: string;
+}
+
+let myArray: StringArray;
+myArray = ["Bob", "Fred"];
+
+let myStr: string = myArray[0];
+
+
+## 类类型
+
+1、实现接口
+TypeScript也能够用它来明确的强制一个类去符合某种契约。
+
+
+interface ClockInterface {
+    currentTime: Date;
+}
+
+class Clock implements ClockInterface {
+    currentTime: Date;
+    constructor(h: number, m: number) { }
+}
+
+
+
+2、类静态部分与实例部分的区别
+
+
+
+
+
+
+
+## 继承接口
+
+和类一样，接口也是可以相互继承。
+
+
+// 单接口继承
+interface Shape {
+    color: string;
+}
+
+interface Square extends Shape {
+    sideLength: number;
+}
+
+let square = <Square>{};
+square.color = "blue";
+square.sideLength = 10;
+
+// 多接口继承
+
+
+
+interface Shape {
+    color: string;
+}
+
+interface PenStroke {
+    penWidth: number;
+}
+
+interface Square extends Shape, PenStroke {
+    sideLength: number;
+}
+
+
+## 混合类型
+
+一个对象可以同时做为函数和对象使用，并带有额外的属性。
+
+interface Counter {
+    (start: number): string;
+    interval: number;
+    reset(): void;
+}
+
+function getCounter(): Counter {
+    let counter = <Counter>function (start: number) { };
+    counter.interval = 123;
+    counter.reset = function () { };
+    return counter;
+}
+
+
+
+
+## 接口类继承
+
+当接口继承一个类类型，他会继承类的成员但不包括其实现。
+
+
+class Control {
+    private state: any;
+}
+
+interface SelectableControl extends Control {
+    select(): void;
+}
+
+class Button extends Control implements SelectableControl {
+    select() { }
+}
+
+class TextBox extends Control {
+    select() { }
+}
+
+// 错误：“Image”类型缺少“state”属性。
+class Image implements SelectableControl {
+    select() { }
+}
+
+class Location {
+
+}
+
+
+
+
+
+# 类
+
+## 介绍
+
+传统的javascript程序使用函数和基于函数的继承来创建可重用的组件，
+但对于熟悉使用面向对象的程序员来讲有些棘手，因为他们用的是基于类
+的继承并且对象是由类构件出来的。
+
+
+## 类
+
+class Person{2
+   name:string;
+   age:number;
+   constructor(name:string,age:number){
+       this.name = name;
+       this.age = age;
+   }
+   introduce(){
+       console.log("Hello, My Name is "+this.name+" , I am "+this.age +" years old");
+   }
+}
+let per = new Person("Tom",24);//Hello My Name is Tom,I am 24 years old;
+
+
+
+## 继承
+
+基于类的程序设计中一种最基础的模式是允许使用继承来扩展现有的类。
+
+
+class Animal = {
+
+}
 
