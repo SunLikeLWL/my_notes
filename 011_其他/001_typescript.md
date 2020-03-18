@@ -548,7 +548,7 @@ class Location {
 
 ## 类
 
-class Person{2
+class Person{
    name:string;
    age:number;
    constructor(name:string,age:number){
@@ -567,8 +567,68 @@ let per = new Person("Tom",24);//Hello My Name is Tom,I am 24 years old;
 
 基于类的程序设计中一种最基础的模式是允许使用继承来扩展现有的类。
 
-
+// 基类
 class Animal = {
-
+    go(){
+       console.log("Animal go!");
+    }
 }
+
+// 派生类、子类、超类
+class Dog extends Animal{
+     bark(){
+        console.log("Dog bark")
+     }  
+}
+const dog = new dog();
+dog.go();
+dog.bark();
+
+
+##  public、private、protected
+   
+   ### 1、public
+   Typescript里，成员默认是public，在当前类、子类、类的外部都可以使用
+   
+   ### 2、private
+   不能在声明他的类的外部被访问
+
+   ### 3、protected
+   不能在声明他的类的外部被访问、但是可以在派生类中可以被访问
+
+
+
+## readonly修饰符
+
+ 可以使用 readonly关键字将属性设置为只读的；
+ 只读属性必须在声明时或构造函数里被初始化。
+
+
+
+
+## 存储器
+
+TypeScript支持通过getters/setters来截取对对象成员的访问。
+有效的控制对对象成员的访问。
+
+
+ 
+class Employee {
+    private _fullName: string;
+    get fullName(): string {
+        return this._fullName;
+    }
+    set fullName(newName: string) {
+        this._fullName = newName;
+    }
+}
+
+let employee = new Employee();
+employee.fullName = "Bob Smith";
+ 
+
+
+
+
+
 
