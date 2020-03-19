@@ -5,7 +5,7 @@ https://www.tslang.cn/docs/handbook/variable-declarations.html
 
 
 
-# 基础类型
+# 一、基础类型
 
 
 1、typescript为了使编码更加规范，更有利于维护，增加了类型校验
@@ -147,7 +147,7 @@ let sl:number = (<string>s).length;
 
 
 
-# 变量声明
+# 二、变量声明
 
 ## 变量声明
 
@@ -274,7 +274,7 @@ var z=  [...x,..y,5];
 
 
 
-# 接口
+# 三、接口
 
 ## 介绍
 Typescript的核心原则是对值所具有的机构进行累心检查。
@@ -537,7 +537,7 @@ class Location {
 
 
 
-# 类
+# 四、类
 
 ## 介绍
 
@@ -731,7 +731,7 @@ let p3 = new P3(1,2,3);
 
 
 
-# 函数
+# 五、函数
 
 ## 1、介绍
 函数是Javascript应用程序的基础。
@@ -847,4 +847,363 @@ let person = {
 say(person); 
  // wudikeji,32 
  // {name: "wudikeji", age: 32, say: ƒ}
+
+
+
+# 六、泛型
+
+
+
+## 1、介绍
+把类型明确的工作推迟到创建对象的或者调用方法的时候才去明确的特殊类型。
+
+
+## 2、初识泛型
+
+// 只能传入数值类型
+function print(arg:num):number{
+   return arg;
+}
+// 可以传入任意类型
+
+function print(arg:any):any{
+    return arg;
+}
+
+// 使用any规定参数类型，但是不能确定函数返回值类型
+
+T:类型变量，可以实现返回值类型与传入参数类型保持一致
+
+function print<T>(arg:T):T{
+    return arg;
+}
+
+
+使用方法：
+
+1、传入所有参数，包含类型参数
+
+let res = print<string>("str");// 输出的类型一定是string
+
+2、利用类推论--即时编译会根据传入参数自动确定T参数类型
+
+let res = print("str");// 输入参数类型一定是string
+
+
+
+## 3、使用泛型变量
+
+使用泛型创建泛型函数时，编译器要求在函数体必须正确使用这个通用类型。
+必须把这个参数当做是任意或者所有类型。
+
+### 1、注意使用T类型变量是存在的错误
+
+function print<T>(arg:T):T{
+    console.log(arg.length)// 报错，arg是任意类型，当arg是number类型时不存在length属性
+}
+
+### 2、可以这样使用避免报错
+
+function print<T>(arg:T[]):T[]{
+    console.log(arg.length)// 这是任意类型的数组，存在length属性
+}
+
+或者写成这样
+
+function print<T>(arg:Array<T>):Array<T>{
+    console.log(arg.length)// 这是任意类型的数组，存在length属性
+}
+
+
+## 4、泛型类型
+
+ 
+1、泛型函数：有一个类型参数在最前面
+
+function print<T>(arg:T):T{
+    return arg;
+}
+
+2、可以使用不同的类型参数名，只要在数量上和使用方法上能对应的上就可以。
+
+function print<U>(arg:U):U{
+    return arg;
+}
+
+3、可以使用带有调用签名的对象字面量来定义泛型函数
+
+let myIdentity: {<T>(arg: T): T} = identity;
+
+
+
+## 5、泛型类
+
+  泛型类使用（ <>）括起泛型类型，跟在类名后面。
+
+
+class GenericNumber<T> {
+    zeroValue: T;
+    add: (x: T, y: T) => T;
+}
+let myGenericNumber = new GenericNumber<number>();
+
+
+## 6、泛型约束
+
+function print<T>(arg:T):T{
+    console.log(arg.length)// 报错，arg是任意类型，当arg是number类型时不存在length属性
+}
+
+
+function print<T>(arg:T[]):T[]{
+    console.log(arg.length)// 这是任意类型的数组，存在length属性
+}
+
+
+
+
+# 七、枚举
+
+## 1、介绍
+
+ 
+   枚举是在一定范围内取值,并且这个值必须是枚举类型中的任意一个,并且只能有一个。
+
+   使用枚举可以定义一个带名字变量
+   使用枚举可以清晰地表达意图或创建一组有区别的用例
+   Typescript支持数字和基于字符串的枚举
+
+
+
+## 2、枚举
+
+  ### 1、数字枚举
+
+  enum http =  {
+   Continue = 100,
+   Switching =  101,
+   Processing = 102,
+  }
+  enum  button ={
+      open = 1,
+      close = 0
+  }
+  // 要注意每个枚举成员的值都是不同的。
+
+
+  数字枚举可以混入到计算过的和常量成员
+   
+  但是不带初始化器的枚举或者被放在第一的位置，
+  或者被放在使用了数字常量或其它常量初始化了的枚举后面是不允许的。
+
+  enum button = {
+     open = getButton(),
+     close,  // error
+  }
+
+
+### 2、字符串枚举
+
+ 在字符串枚举里，每个变量成员都必须用字符串字面量，
+ 或另个一个字符串枚举成员进行初始化。
+
+
+ enum  dir = {
+     Up ="UP",
+     Down = "DOWN",
+     Left = "LEFT",
+     Right = "RIGHT",
+ }
+
+由于字符串枚举没有自增长的行为，字符串枚举可以很好的序列化。
+
+### 3、异构枚举
+  从技术角度来说，枚举可以混合字符串和数字成员
+
+  enum sn {
+      No=0,
+      Yes="YES",
+  }
+
+### 4、计算的和常量成员
+
+    每个枚举成员都带有一个值，它可以是常量或计算出来的。
+
+   a、没有初始化
+
+   enum E{
+       x,// 默认为0
+   }
+
+  b、初始化没有完全
+   enum E{
+       A = 1,
+       B,  // 2 默认是上一个成员的值+1
+       C,  // 3 默认是上一个成员的值+1
+   }
+  
+
+  c、初始化是计算得来的值
+
+  enum E{
+      A = 1++,
+      B = 2/1,
+      C = 3*2,
+  }
+
+  ### 5、联合枚举与枚举成员的类型
+
+  存在一种特殊的非计算的常量枚举成员的子集：字面量枚举成员。
+  字面量枚举成员是指不带有初始值的常量枚举成员，或者是指被初始化为
+   *任何字符串字面量
+   *任何数字字面量
+   *应用了一元-符号的数字字面量
+
+    enum ShapeKind {
+        Circle,
+        Square,
+    }
+    interface Circle {
+        kind: ShapeKind.Circle;
+        radius: number;
+    }
+    interface Square {
+        kind: ShapeKind.Square;
+        sideLength: number;
+    }
+    let c: Circle = {
+        kind: ShapeKind.Square,
+        //    ~~~~~~~~~~~~~~~~ Error!
+        radius: 100,
+    }
+
+
+
+### 6、运行时的枚举
+
+枚举是运行时真正存在的对象。
+
+    enum E {
+        X, Y, Z
+    }
+    function f(obj: { X: number }) {
+        return obj.X;
+    }
+    // Works, since 'E' has a property named 'X' which is a number.
+    f(E);
+
+
+### 7、反向映射
+
+enum Enum {
+    A
+}
+let a = Enum.A;
+let nameOfA = Enum[a]; // "A"
+
+
+
+
+## 2、外部枚举
+外部枚举用来描述已经存在的枚举类型的形状
+
+declare enum Enum {
+    A = 1,
+    B,
+    C = 2
+}
+
+外部枚举和非外部枚举有一个重要的区别，在正常的的枚举里面，
+没有初始化方法的成员被当成常熟成员。
+对于非常数的外部枚举而言，没有初始化方法时被当做需要经过计算的。
+
+
+
+
+
+
+
+# 八、类型推断
+
+## 1、基础
+Typescript里，在没有明确指出类型的地方，类型推断会提供类型。
+
+let x = 3;//x被推断为数字
+
+这种推断发生在初始化变量和成员，设置默认参数值和决定函数返回值时
+
+
+## 2、最佳通用类型
+
+let x = [0,1,null];
+
+考虑所有元素成员，给出一个兼容所有候选类型的类型
+
+let zoo = [new Rhino(), new Elephant(), new Snake()];
+
+如果没有找到最佳通用类型的话，类型推断为联合数组类型
+(Rhino | Elephant | Snake)[]。
+
+
+
+## 3、上下文类型
+
+按上下文归类：Typescript类型推论也可以按照相反的方向进行。
+  
+  // 参数不设置默认类型
+  function (obj){
+      console.log(obj.name);// Error 
+  }
+  
+  // 参数设置类型any不报错
+  //这个函数表达式有明确的参数类型注解，上下文类型被忽略
+  function (obj:any){
+      console.log(obj.name);// No Error
+  }
+
+
+
+
+
+
+
+
+
+
+
+# 九、类型兼容性
+
+
+
+
+
+
+
+
+# 十、高级类型
+
+# 十一、Symbols
+
+# 十二、迭代器和生成器
+
+# 十三、模块
+
+# 十四、命名空间
+
+# 十五、命名空间和模块
+
+# 十六、模块解析
+
+# 十七、声明合并
+
+# 十八、JSX
+
+# 十九、装饰器
+
+# 二十、Minxins
+
+# 二十一、三斜线类型指令
+
+# 二十二 javascript文件类型检查
+
 
