@@ -612,7 +612,6 @@ TypeScript支持通过getters/setters来截取对对象成员的访问。
 有效的控制对对象成员的访问。
 
 
- 
 class Employee {
     private _fullName: string;
     get fullName(): string {
@@ -628,7 +627,224 @@ employee.fullName = "Bob Smith";
  
 
 
+## 静态属性
+static
+仅当在被实例化的时候才会被初始化的属性
+
+
+class Dog(){
+    static type='purou';
+}
+
+
+## 抽象类
+
+abstract 用于定义抽象类和在抽象类中定义抽象方法
+抽象类作为其他派生类的的基础类使用，一般不会被实例化。
+不同于接口，抽象类可以包含成员的实现细节
+
+abstract class Animal{
+     abstract bark(): void;
+      run():void{
+          console.log("run);
+      }
+}
 
 
 
+抽象类中的抽象方法不包含具体实现并且必须在派生类中实现。
+抽象方法与接口方法类似，两者都是定义方法签名单不包含方法本体
+
+class dog extends Animal{
+    constructor(){
+        super();// 必须在派生类的构造函数中调用super()
+    }
+    speak(){
+        console.log("speak");
+    }
+    fly():void{
+        console.log("fly");
+    }
+    bark():void{
+        console.log("bark");
+    }
+}
+
+
+let animal:Animal; // 允许创建一个抽象类型的引用
+
+animal = new Amimal();// 错误，不能创建一个抽象类的实例
+
+animal = new Dog();// 允许对一个抽象子类进行实例化
+
+animal.bark();//
+
+animal.run();//run
+
+animal.fly();// 错误，方法在声明的抽象类中不存在
+
+
+## 高级技巧
+
+### 1、构造函数
+
+当你在Typescript里，声明一个类的时候，实际上同时声明了很多东西，
+a、首先是类的实例类型
+
+class Box{
+    
+}
+
+let box: Box; // Box就是box的类型
+
+b、其次创建了一个构造函数值
+
+
+### 2、把类当接口来用
+
+类定义创建了两个东西：类的实例和一个构造函数
+
+因为类可以创建出类型，所以你能够在允许使用接口的地方使用类。
+
+class P2{
+    x:number;
+    y:number;
+}
+interface Triangle extends P3{
+      z:number;
+}
+
+let p3 = new P3(1,2,3);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# 函数
+
+## 1、介绍
+函数是Javascript应用程序的基础。
+
+## 2、 函数
+和Javascript一样，Typescript可以创建有名函数和匿名函数。
+// 函数声明式（具名函数）
+function add(x,y){ 
+   return x+y;
+}// 函数表达式(匿名函数)
+let add = function(x,y){return x+y;}
+
+## 3、函数类型
+
+### 1、为函数定义类型
+// number 类型
+function add(x:number,y:number):number{  
+   return x+y;
+}
+add(1,2);// 3
+
+### 2、书写完整函数类型
+// 对比函数
+let add:number = function(x:number,y:number):number{
+    return x+y;
+}
+函数类型包括两部分：参数类型和返回值类型。
+完整函数类型两者都是需要的。
+// 完整函数类型
+let add:(baseValue:number,increment:number) = function(x:number,y:number):number{   
+ return x+y;
+}
+
+### 3、推断函数类型
+
+如果你在赋值语句的一边指定了类型但是另一边没有类型的话，
+TypeScript编译器会自动识别出类型。
+let add:number = function(x:number,y:number):number{  
+  return x+y;
+}
+let add:(baseValue:number,increment:number) = function(x:number,y:number):number{    
+return x+y;
+}
+
+
+## 4、可选参数和默认参数
+Typescript里的每一个参数都是必须的。传递的参数和期望的参数个数必须一致
+// 正常情况
+function add(a:number,b:number,c:number):number{ 
+   return a+b+c;
+}
+add(1,2);// 错误，参数少了
+add(12,312,3,211);// 错误，参数多了
+add(1,2,3);// 6// 可选参数,参数c可选填
+function add(a:number,b:number,c?:number):number{  
+  if(!c){    
+  return a+b;
+    } 
+   return a+b+c;
+}// 默认参数
+function add(a:number,b:number=3):number{ 
+   return a+b;
+}
+add(1);//4
+add(1,2);//3
+add(1,undefined);//4
+
+
+## 5、剩余参数
+非必要参数，默认参数和可选参数都表示某个参数
+剩余参数表示传过来的未知个数的参数
+function add(...rest:number):number{ 
+   var s = 0; 
+   rest.map(function(item){    
+    s+=item;  
+  })  
+  return s;
+}
+add(1,2,3);// 
+6add(1);//1
+
+
+## 6、this
+1、this和箭头函数
+
+在javascript中，this的值在函数被调用的时候才会指定。
+let person = {  
+    name:"wudikeji",   
+   age: 32,   
+   say:function(){  
+        return function(){   
+           console.log(this.name+","+this.age);    
+          console.log(this)    
+      }   
+   }
+  } 
+ let say = person.say(); 
+ say();   // undefined   // window
+ 我们在全局作用域下调用了person的方法say()，此时this已经指向了window（严格模式下是undefined）
+2、this参数
+let person = {   
+   name:"wudikeji",   
+   age: 32,  
+    say:function(){   
+       let _this = this; 
+         return function(_this){  
+            console.log(_this.name+","+_this.age);    
+          console.log(_this)      
+    }   
+   } 
+ } 
+ let say = person.say();  
+say(person); 
+ // wudikeji,32 
+ // {name: "wudikeji", age: 32, say: ƒ}
 
