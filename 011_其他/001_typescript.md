@@ -1173,8 +1173,97 @@ let zoo = [new Rhino(), new Elephant(), new Snake()];
 
 # 九、类型兼容性
 
+  ## 1、介绍
+  Typescript里的类型兼容是基于结构子类型的。
+  结构子类型是一种只使用其成员来描述类型的方式。
+
+  interface Person{
+      name:string,
+      age: number,
+  }
+  interface Man{
+      name:string,
+      age:number
+  }
+  let p:Person;
+  p = new Man(); // 这是被允许的
 
 
+  ## 2、初识类型兼容
+
+   兼容规则：如果x要兼容y，那么y至少具有与x相同的属性。
+
+   
+  interface Person{
+      name:string,
+  }
+  interface Man{
+      name:string,
+      age:number
+  }
+  let m:Man;
+  let p = {name:"lisi",age:12};
+  m = p;  // 这是被允许的，因为m具有的属性，y都具备
+
+
+
+
+  ## 3、比较两个函数
+   
+    即判断两个函数是否兼容
+
+    let a = (x:number) => 0;
+    let b = (y:number,z:string) =>0
+    a = b;// 成立的，因为a函数中的属性b函数中都有
+    b = a;// 不成立，因为b函数中的属性a函数中不全有
+
+
+
+
+## 4、枚举
+
+枚举类型与数字类型兼容，并且数字类型和枚举类型兼容。
+不同枚举之间是不兼容的。
+
+enum Status { Ready, Waiting };
+enum Color { Red, Blue, Green };
+let status = Status.Ready;
+status = Color.Green;  // Error
+
+## 5、类
+
+类与对象字面量和接口差不多
+但是有一点不同：类有静态部分和实例部分的类型。
+
+
+比较两个类类型的对象时，只有实例的成员会被比较。
+静态成员和构造函数不在比较范围内。
+
+class Person {
+    name: string;
+    constructor(name: string, age: number) { }
+}
+class Man {
+    name: number;
+    constructor(name:string,age: number) { }
+}
+let p: Person;
+let m: Man;
+p = m;  // OK
+m = p;  // OK
+
+
+## 6、泛型
+
+因为Typescript是结构类型系统，类型参数只影响使用其作为类型一部分的结果类型。
+
+interface Person<T> {
+}
+let p1: Person<number>;
+let p2: Person<string>;
+
+x = y;  // OK
+// x和y是兼容的，因为他们的结构使用类型参数一致。
 
 
 
@@ -1182,9 +1271,125 @@ let zoo = [new Rhino(), new Elephant(), new Snake()];
 
 # 十、高级类型
 
+
+
+
 # 十一、Symbols
 
+  ## 1、介绍
+  Symbol类型的值是通过Symbol构造函数创建的
+  
+  1、创建
+  let sym1 =  Symbol();// 可以不带参数
+  let sym2 =  Symbol("sunlike");// 可选的字符串参数
+  
+  2、Symbols是不可改变唯一的。
+  let sym3 =  Symbol("sunlike"); 
+  let sym4 =  Symbol("sunlike");
+  sym3 === sym4;// false,symbols是唯一的
+
+  3、像字符串一样，symbols也可以用做对象属性的键。
+
+  let sym = Symbol("name");
+  let obj = {
+      [sym]:'lisi',
+  }
+
+  4、Symbols也可以与计算出的属性名称相结合来声明对象的属性和类成员。
+
+
+    const getName = Symbol();
+    class C {
+        [getName](){
+        return "C";
+        }
+    }
+    let c = new C();
+    let name = c[getName](); // "C"
+
+   
+   ## 2、众所周知的Symbols（纯复制）
+
+    Symbol.hasInstance
+    方法，会被instanceof运算符调用。构造器对象用来识别一个对象是否是其实例。
+
+    Symbol.isConcatSpreadable
+    布尔值，表示当在一个对象上调用Array.prototype.concat时，这个对象的数组元素是否可展开。
+
+    Symbol.iterator
+    方法，被for-of语句调用。返回对象的默认迭代器。
+
+    Symbol.match
+    方法，被String.prototype.match调用。正则表达式用来匹配字符串。
+
+    Symbol.replace
+    方法，被String.prototype.replace调用。正则表达式用来替换字符串中匹配的子串。
+
+    Symbol.search
+    方法，被String.prototype.search调用。正则表达式返回被匹配部分在字符串中的索引。
+
+    Symbol.species
+    函数值，为一个构造函数。用来创建派生对象。
+
+    Symbol.split
+    方法，被String.prototype.split调用。正则表达式来用分割字符串。
+
+    Symbol.toPrimitive
+    方法，被ToPrimitive抽象操作调用。把对象转换为相应的原始值。
+
+    Symbol.toStringTag
+    方法，被内置方法Object.prototype.toString调用。返回创建对象时默认的字符串描述。
+
+    Symbol.unscopables
+    对象，它自己拥有的属性会被with作用域排除在外。
+
+
+
+
+
+
+
 # 十二、迭代器和生成器
+
+## 1、可迭代性
+当一个对象实现了Symbol.interator属性时，我们认为他是可以迭代的。
+ 内置Symbol.interator的类型有：
+ Array,
+ Map,
+ Set,
+ String,
+ Int32Array,
+ Unit32Array
+
+ ## 2、 for..of和for..in
+  
+   1、for..of
+   for..of会遍历可迭代的对象，调用对象上的可迭代方法。
+   遍历的是对象的键对应的值
+
+    let arr = [1,2,3];
+    for (let a of arr) {
+        console.log(a); //  1,2,3
+    }
+   
+     
+    2、for..in
+
+     遍历的是对象的键列表
+
+    let arr = [1,2,3];
+    for (let a in arr) {
+        console.log(a); //  0,1,2
+    }
+
+
+
+
+
+
+
+
+
 
 # 十三、模块
 
