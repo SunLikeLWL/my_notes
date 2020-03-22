@@ -95,7 +95,7 @@ readyList.resolveWidth(document, [jQuery])
 
 
 
-// 文件加载完
+// 文件加载完,包括图片等媒体文件记载完
 window.onload = function() {
 
 
