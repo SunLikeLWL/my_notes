@@ -4,8 +4,6 @@ JQuery源码解读
 JQ的事件绑定（ 妙味讲堂 - 视频笔记）
 
 
-
-
 1、实例
 
 
@@ -297,6 +295,7 @@ jQuery.Event = function( src, props ) {
 	}
 
 	// Put explicitly provided properties onto the event object
+	// 将属性继承到当前对象
 	if ( props ) {
 		jQuery.extend( this, props );
 	}
@@ -305,6 +304,7 @@ jQuery.Event = function( src, props ) {
 	this.timeStamp = src && src.timeStamp || jQuery.now();
 
 	// Mark it as fixed
+	// 设置缓存
 	this[ jQuery.expando ] = true;
 };
 
@@ -336,7 +336,6 @@ jQuery.Event.prototype = {
     // 阻止默认事件
 	stopPropagation: function() {
 		var e = this.originalEvent;
-
 		this.isPropagationStopped = returnTrue;
 		if ( !e ) {
 			return;
@@ -348,12 +347,12 @@ jQuery.Event.prototype = {
         // 兼容某些IE不支持preventDefault
 		e.cancelBubble = true;
 	},
+	// 相同元素的其他事件会被阻止掉
 	stopImmediatePropagation: function() {
 		this.isImmediatePropagationStopped = returnTrue;
 		this.stopPropagation();
 	}
 };
-
 
 jQuery.event = {
 
@@ -446,6 +445,7 @@ jQuery.event = {
 				if ( !special.setup || special.setup.call( elem, data, namespaces, eventHandle ) === false ) {
 					// 真正绑定事件的地方
 					if ( elem.addEventListener ) {
+						// false: 默认冒泡事件
 						elem.addEventListener( type, eventHandle, false );
 					} else if ( elem.attachEvent ) {
 						// 兼容IE不支持addEventListener的事件绑定
@@ -494,7 +494,9 @@ jQuery.event = {
 		// Once for each type.namespace in types; type may be omitted
 		types = ( types || "" ).match( core_rnotwhite ) || [""];
 		t = types.length;
-		while ( t-- ) {
+		// off("click.aaa") off(".aaa") off();
+		// 考虑命名空间的兼容问题
+  		while ( t-- ) {
 			tmp = rtypenamespace.exec( types[t] ) || [];
 			type = origType = tmp[1];
 			namespaces = ( tmp[2] || "" ).split( "." ).sort();
@@ -514,6 +516,7 @@ jQuery.event = {
 
 			// Remove matching events
 			origCount = j = handlers.length;
+			// 
 			while ( j-- ) {
 				handleObj = handlers[ j ];
 
@@ -571,7 +574,7 @@ jQuery.event = {
 		if ( rfocusMorph.test( type + jQuery.event.triggered ) ) {
 			return;
 		}
-
+        // 命名空间
 		if ( type.indexOf(".") >= 0 ) {
 			// Namespaced trigger; create a regexp to match event type in handle()
 			namespaces = type.split(".");
@@ -594,6 +597,7 @@ jQuery.event = {
 
 		// Clean up the event in case it is being reused
 		event.result = undefined;
+		// 移动端不存在事件源event.target就拿elem给移动端用
 		if ( !event.target ) {
 			event.target = elem;
 		}
@@ -602,7 +606,7 @@ jQuery.event = {
 		data = data == null ?
 			[ event ] :
 			jQuery.makeArray( data, [ event ] );
-
+        // 特殊事件处理
 		// Allow special events to draw outside the lines
 		special = jQuery.event.special[ type ] || {};
 		if ( !onlyHandlers && special.trigger && special.trigger.apply( elem, data ) === false ) {
@@ -691,7 +695,7 @@ jQuery.event = {
 	},
 
 	dispatch: function( event ) {
-		//  真正事件处理的后继函数
+		// 真正事件处理的后继函数
 		// 分发事件具体操作
 		// Make a writable jQuery.Event from the native event object
 		event = jQuery.event.fix( event );
@@ -707,6 +711,7 @@ jQuery.event = {
 		event.delegateTarget = this;
 
 		// Call the preDispatch hook for the mapped type, and let it bail if desired
+		// 事件触发前触发
 		if ( special.preDispatch && special.preDispatch.call( this, event ) === false ) {
 			return;
 		}
@@ -729,11 +734,12 @@ jQuery.event = {
 
 					event.handleObj = handleObj;
 					event.data = handleObj.data;
-
+                    //  找到对应的回调
 					ret = ( (jQuery.event.special[ handleObj.origType ] || {}).handle || handleObj.handler )
 							.apply( matched.elem, args );
 
 					if ( ret !== undefined ) {
+						// 阻止冒泡和默认
 						if ( (event.result = ret) === false ) {
 							event.preventDefault();
 							event.stopPropagation();
@@ -744,15 +750,18 @@ jQuery.event = {
 		}
 
 		// Call the postDispatch hook for the mapped type
+		// 事件触发后触发
 		if ( special.postDispatch ) {
+			// 执行之后的特殊处理
 			special.postDispatch.call( this, event );
 		}
-
+        // 返回执行结果
 		return event.result;
 	},
 
 	handlers: function( event, handlers ) {
 		// 处理事件队列顺序
+		// 委托，层级越深，执行越早
 		var sel, handleObj, matches, i,
 			handlerQueue = [],
 			delegateCount = handlers.delegateCount,
@@ -825,7 +834,7 @@ jQuery.event = {
 				{};
 		} 
 		copy = fixHook.props ? this.props.concat( fixHook.props ) : this.props;
-
+        // 创建jq的event
 		event = new jQuery.Event( originalEvent );
 
 		i = copy.length;
@@ -849,19 +858,19 @@ jQuery.event = {
 		// Support: IE<9
 		// For mouse/key events, metaKey==false if it's undefined (#3368, #11328)
 		event.metaKey = !!event.metaKey;
-
+        // 转为兼容的事件
 		return fixHook.filter ? fixHook.filter( event, originalEvent ) : event;
 	},
 
 	// Includes some event props shared by KeyEvent and MouseEvent
-	props: "altKey bubbles cancelable ctrlKey currentTarget eventPhase metaKey relatedTarget shiftKey target timeStamp view which".split(" "),
+	props: "altKey bubbles cancelable ctrlKey currentTarget eventPhase"+
+	 " metaKey relatedTarget shiftKey target timeStamp view which".split(" "),
 
 	fixHooks: {},
 
 	keyHooks: {
 		props: "char charCode key keyCode".split(" "),
 		filter: function( event, original ) {
-
 			// Add which for key events
 			// 低版本witch不支持
             // charCode不存在就用keyCode，不断降级
@@ -874,8 +883,8 @@ jQuery.event = {
 	},
 
 	mouseHooks: {
-		props: "button buttons clientX clientY fromElement offsetX offsetY 
-		 pageY screenX screenY toElement".split(" "),
+		props: "button buttons clientX clientY fromElement "+
+		"offsetX offsetY pageY screenX screenY toElement".split(" "),
 		// event：jq对象
 		// orginal：原生对象
 		filter: function( event, original ) {
@@ -915,6 +924,9 @@ jQuery.event = {
 	special: {
 		load: {
 			// Prevent triggered image.load events from bubbling to window.load
+			// 没有冒泡
+			// window.load
+			// img.load 不允许冒泡
 			noBubble: true
 		},
 		focus: {
@@ -931,6 +943,7 @@ jQuery.event = {
 					}
 				}
 			},
+			// 委托的时候不支持光标事件，就模拟实现
 			delegateType: "focusin"
 		},
 		blur: {
@@ -945,6 +958,7 @@ jQuery.event = {
 		click: {
 			// For checkbox, fire native event so checked state will be right
 			trigger: function() {
+				// 当元素是复选框的时候，触发点击事件的时候起效默认事件
 				if ( jQuery.nodeName( this, "input" ) && this.type === "checkbox" && this.click ) {
 					this.click();
 					return false;
@@ -952,26 +966,31 @@ jQuery.event = {
 			},
 
 			// For cross-browser consistency, don't fire native .click() on links
+			// 针对a标签的时候阻止默认行为，不跳转
 			_default: function( event ) {
 				return jQuery.nodeName( event.target, "a" );
 			}
 		},
 
 		beforeunload: {
+			// 事件执行结束
 			postDispatch: function( event ) {
 
 				// Even when returnValue equals to undefined Firefox will still show alert
 				if ( event.result !== undefined ) {
+					// 火狐下不设置这个值就不会有提示弹框
 					event.originalEvent.returnValue = event.result;
 				}
 			}
 		}
 	},
-
+	
+	// 事件模拟
 	simulate: function( type, elem, event, bubble ) {
 		// Piggyback on a donor event to simulate a different one.
 		// Fake originalEvent to avoid donor's stopPropagation, but if the
 		// simulated event prevents default then we do the same on the donor.
+		// 模拟事件操作（自定义事件）trigger、dispatch
 		var e = jQuery.extend(
 			new jQuery.Event(),
 			event,
@@ -982,11 +1001,14 @@ jQuery.event = {
 			}
 		);
 		if ( bubble ) {
+			// 支持冒泡
 			jQuery.event.trigger( e, null, elem );
 		} else {
+			// 不支持冒泡
 			jQuery.event.dispatch.call( elem, e );
 		}
 		if ( e.isDefaultPrevented() ) {
+			// 
 			event.preventDefault();
 		}
 	}
