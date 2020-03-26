@@ -257,9 +257,18 @@ $("#div").on("click mouseover",function(){
 
 //13、pageX、pageY兼容
 // 不是所有的浏览器都支持
+event.pageX = original.clientX + ( doc && doc.scrollLeft || body && body.scrollLeft || 0 ) - ( doc && doc.clientLeft || body && body.clientLeft || 0 );
+event.pageY = original.clientY + ( doc && doc.scrollTop  || body && body.scrollTop  || 0 ) - ( doc && doc.clientTop  || body && body.clientTop  || 0 );
 
 
 
+
+// 14、keyCode
+document.onkeyup(function(event){
+	console.log(event.keyCode)
+	console.log(event.charCode);
+	// 兼容比较好的
+})
 
 
 
@@ -682,7 +691,8 @@ jQuery.event = {
 	},
 
 	dispatch: function( event ) {
-        //  真正事件处理的后继函数
+		//  真正事件处理的后继函数
+		// 分发事件具体操作
 		// Make a writable jQuery.Event from the native event object
 		event = jQuery.event.fix( event );
 
@@ -702,6 +712,7 @@ jQuery.event = {
 		}
 
 		// Determine handlers
+		// 事件队列处理
 		handlerQueue = jQuery.event.handlers.call( this, event, handlers );
 
 		// Run delegates first; they may want to stop propagation beneath us
@@ -802,7 +813,7 @@ jQuery.event = {
 		var i, prop, copy,
 			type = event.type,
 			originalEvent = event,
-			// 兼容事件
+			// 检查要做兼容事件
 			fixHook = this.fixHooks[ type ];
 
 		if ( !fixHook ) {
@@ -852,6 +863,8 @@ jQuery.event = {
 		filter: function( event, original ) {
 
 			// Add which for key events
+			// 低版本witch不支持
+            // charCode不存在就用keyCode，不断降级
 			if ( event.which == null ) {
 				event.which = original.charCode != null ? original.charCode : original.keyCode;
 			}
@@ -861,7 +874,8 @@ jQuery.event = {
 	},
 
 	mouseHooks: {
-		props: "button buttons clientX clientY fromElement offsetX offsetY pageX pageY screenX screenY toElement".split(" "),
+		props: "button buttons clientX clientY fromElement offsetX offsetY 
+		 pageY screenX screenY toElement".split(" "),
 		// event：jq对象
 		// orginal：原生对象
 		filter: function( event, original ) {
