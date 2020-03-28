@@ -5698,6 +5698,7 @@ jQuery.fn.extend({
 		}
 	}
 });
+
 var isSimple = /^.[^:#\[\.,]*$/,
 	rparentsprev = /^(?:parents|prev(?:Until|All))/,
 	rneedsContext = jQuery.expr.match.needsContext,
