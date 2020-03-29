@@ -1,3 +1,6 @@
+JQuery源码解读
+
+
 DOM元素节点操作（ 妙味讲堂 - 视频笔记）
 
 
@@ -899,12 +902,16 @@ function getAll(context, tag) {
 
 jQuery.fn.extend({
     wrapAll: function (html) {
+        // $("div").wrapAll(function(){
+        //     return "<div/>"
+        // })
+        // 参数也可以是函数
         if (jQuery.isFunction(html)) {
             return this.each(function (i) {
                 jQuery(this).wrapAll(html.call(this, i));
             });
         }
-
+        // 
         if (this[0]) {
             // The elements to wrap the target around
             var wrap = jQuery(html, this[0].ownerDocument).eq(0).clone(true);
@@ -912,7 +919,8 @@ jQuery.fn.extend({
             if (this[0].parentNode) {
                 wrap.insertBefore(this[0]);
             }
-
+            // $("div").wrapAll("<div><p></p></div>")
+            // 可能是多层标签
             wrap.map(function () {
                 var elem = this;
 
@@ -937,10 +945,8 @@ jQuery.fn.extend({
         return this.each(function () {
             var self = jQuery(this),
                 contents = self.contents();
-
             if (contents.length) {
                 contents.wrapAll(html);
-
             } else {
                 self.append(html);
             }
@@ -957,6 +963,7 @@ jQuery.fn.extend({
 
     unwrap: function () {
         return this.parent().each(function () {
+            // 不能删除body标签
             if (!jQuery.nodeName(this, "body")) {
                 jQuery(this).replaceWith(this.childNodes);
             }
