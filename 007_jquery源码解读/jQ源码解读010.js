@@ -1,4 +1,8 @@
-DOM操作（ 妙味讲堂 - 视频笔记）
+JQuery源码解读
+
+
+
+DOM元素节点筛选（ 妙味讲堂 - 视频笔记）
 
 
 0、添加、删除、获取、包装、DOM筛选
@@ -9,7 +13,7 @@ DOM操作（ 妙味讲堂 - 视频笔记）
 1、实例
 
     // 1、find、filter、not、has、is过滤器
-    < body >
+< body >
     <div class='box'></div>
     <div class='tip'></div>
 </body >
@@ -294,11 +298,6 @@ jQuery.fn.extend({
 });
 
 
-
-
-
-
-
 function sibling(cur, dir) {
     do {
         cur = cur[dir];
@@ -353,12 +352,13 @@ jQuery.each({
     siblings: function (elem) {
         return jQuery.sibling((elem.parentNode || {}).firstChild, elem);
     },
-    // 所有子节点
+    // 所有子节点不包括文本
     children: function (elem) {
         return jQuery.sibling(elem.firstChild);
     },
-    // 文本内容
+    // 节点的子节点，包括文本
     contents: function (elem) {
+        // elem.contentDocument 对应的文档对象
         return jQuery.nodeName(elem, "iframe") ?
             elem.contentDocument || elem.contentWindow.document :
             jQuery.merge([], elem.childNodes);
@@ -417,11 +417,15 @@ jQuery.extend({
     },
 
     dir: function (elem, dir, until) {
+        // elem:当前要操作的每一个元素
+        // dir 操作父节点还是兄弟节点
+        // util 范围
         var matched = [],
             cur = elem[dir];
 
         while (cur && cur.nodeType !== 9 && (until === undefined || cur.nodeType !== 1 || !jQuery(cur).is(until))) {
             if (cur.nodeType === 1) {
+                // 文本
                 matched.push(cur);
             }
             cur = cur[dir];
@@ -432,6 +436,7 @@ jQuery.extend({
     sibling: function (n, elem) {
         var r = [];
         for (; n; n = n.nextSibling) {
+            // n!==elem 排除当前元素节点
             if (n.nodeType === 1 && n !== elem) {
                 r.push(n);
             }

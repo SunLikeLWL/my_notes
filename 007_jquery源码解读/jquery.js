@@ -5698,6 +5698,7 @@ jQuery.fn.extend({
 		}
 	}
 });
+
 var isSimple = /^.[^:#\[\.,]*$/,
 	rparentsprev = /^(?:parents|prev(?:Until|All))/,
 	rneedsContext = jQuery.expr.match.needsContext,
@@ -7178,7 +7179,8 @@ function setPositiveNumber( elem, value, subtract ) {
 		// Guard against undefined "subtract", e.g., when used as in cssHooks
 		Math.max( 0, matches[ 1 ] - ( subtract || 0 ) ) + ( matches[ 2 ] || "px" ) :
 		value;
-}
+
+		
 
 function augmentWidthOrHeight( elem, name, extra, isBorderBox, styles ) {
 	var i = extra === ( isBorderBox ? "border" : "content" ) ?
@@ -7452,6 +7454,9 @@ jQuery.each({
 		jQuery.cssHooks[ prefix + suffix ].set = setPositiveNumber;
 	}
 });
+
+
+
 var r20 = /%20/g,
 	rbracket = /\[\]$/,
 	rCRLF = /\r?\n/g,
