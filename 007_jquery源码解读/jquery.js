@@ -7465,6 +7465,8 @@ var r20 = /%20/g,
 
 jQuery.fn.extend({
 	serialize: function() {
+		// this.serializeArray()  转为数组对象
+		// jQuery.param 对数组对象进行拼接
 		return jQuery.param( this.serializeArray() );
 	},
 	serializeArray: function() {
@@ -7473,22 +7475,29 @@ jQuery.fn.extend({
 			var elements = jQuery.prop( this, "elements" );
 			return elements ? jQuery.makeArray( elements ) : this;
 		})
+		// 筛选
 		.filter(function(){
 			var type = this.type;
 			// Use .is(":disabled") so that fieldset[disabled] works
+			// 存在name属性，并且不是禁用的
 			return this.name && !jQuery( this ).is( ":disabled" ) &&
+			// 是表单元素
 				rsubmittable.test( this.nodeName ) && !rsubmitterTypes.test( type ) &&
+				// 单选框复选框
 				( this.checked || !manipulation_rcheckableType.test( type ) );
 		})
+		// 拼接
 		.map(function( i, elem ){
 			var val = jQuery( this ).val();
-
+			// 如果是null就返回null
+			// 如果是数组就遍历数组
 			return val == null ?
 				null :
 				jQuery.isArray( val ) ?
 					jQuery.map( val, function( val ){
 						return { name: elem.name, value: val.replace( rCRLF, "\r\n" ) };
 					}) :
+					// \r\n回车
 					{ name: elem.name, value: val.replace( rCRLF, "\r\n" ) };
 		}).get();
 	}

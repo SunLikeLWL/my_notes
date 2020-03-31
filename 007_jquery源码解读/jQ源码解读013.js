@@ -24,7 +24,26 @@ $.decodeURIComponent($.param({name:"sunlike",arr:[12,3,2]}));//name=sunlike&arr=
 
 
 
-``
+
+// 3、load
+
+$(function(){
+	$("div").load("1.html ul",{name:"sunlike"},function(text,status,fun){
+		console.log(text);// 请求的文档内容
+		console.log(status);//请求的状态
+		console.log(fun);//  request的返回结果
+	})
+})
+
+$(window).load(function(){
+	// 文档加载完成
+})
+
+
+
+
+
+
 
 20、源码
 
@@ -286,6 +305,7 @@ function inspectPrefiltersOrTransports( structure, options, originalOptions, jqX
 // Fixes #9887
 function ajaxExtend( target, src ) {
 	var deep, key,
+	// flatOptions:{} 不进行深拷贝，防止内存泄漏
 		flatOptions = jQuery.ajaxSettings.flatOptions || {};
 
 	for ( key in src ) {
@@ -301,14 +321,17 @@ function ajaxExtend( target, src ) {
 }
 
 jQuery.fn.load = function( url, params, callback ) {
+	// 不是字符串
+	// $(window).load(function())
 	if ( typeof url !== "string" && _load ) {
 		return _load.apply( this, arguments );
 	}
-
-	var selector, response, type,
+	
+	
+	var selector, response, type, 
 		self = this,
 		off = url.indexOf(" ");
-
+    //  判断url里面是不是有筛选
 	if ( off >= 0 ) {
 		selector = url.slice( off, url.length );
 		url = url.slice( 0, off );
@@ -328,28 +351,30 @@ jQuery.fn.load = function( url, params, callback ) {
 
 	// If we have elements to modify, make the request
 	if ( self.length > 0 ) {
+		// 调用ajax
 		jQuery.ajax({
 			url: url,
 
 			// if "type" variable is undefined, then "GET" method will be used
 			type: type,
-			dataType: "html",
+			dataType: "html", // 返回数据类型是html
 			data: params
 		}).done(function( responseText ) {
 
 			// Save response for use in complete callback
 			response = arguments;
-
+            // 添加到html
 			self.html( selector ?
-
 				// If a selector was specified, locate the right elements in a dummy div
 				// Exclude scripts to avoid IE 'Permission Denied' errors
+				// 动态添加div
 				jQuery("<div>").append( jQuery.parseHTML( responseText ) ).find( selector ) :
 
 				// Otherwise use the full result
 				responseText );
-
+        // 完成成功失败都走这个回调
 		}).complete( callback && function( jqXHR, status ) {
+			// 调用回调
 			self.each( callback, response || [ jqXHR.responseText, status, jqXHR ] );
 		});
 	}
@@ -374,23 +399,24 @@ jQuery.extend({
 	etag: {},
 
 	ajaxSettings: {
-		url: ajaxLocation,
-		type: "GET",
+		url: ajaxLocation, // 默认是当前文档
+		type: "GET",// 默认请求方式
 		isLocal: rlocalProtocol.test( ajaxLocParts[ 1 ] ),
-		global: true,
-		processData: true,
-		async: true,
+		global: true, // 全局事件
+		processData: true,// 是否要进行数据序列化处理
+		async: true,// 异步方式或者是同步方式
 		contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+		// 对数据进行编码
 		/*
-		timeout: 0,
+		timeout: 0,// 超时处理
 		data: null,
-		dataType: null,
-		username: null,
+		dataType: null, // 求情数据类型
+		username: null, // 服务器校验
 		password: null,
-		cache: null,
-		throws: false,
+		cache: null,// 设置是否需要缓存
+		throws: false,// ajax自带的抛出异常错误
 		traditional: false,
-		headers: {},
+		headers: {},// 请求头信息
 		*/
 
 		accepts: {
@@ -400,13 +426,13 @@ jQuery.extend({
 			xml: "application/xml, text/xml",
 			json: "application/json, text/javascript"
 		},
-
+        // 匹配返回类型
 		contents: {
 			xml: /xml/,
 			html: /html/,
 			json: /json/
 		},
-
+       // xml对象是模拟的，不是原生的，不带有这些属性   
 		responseFields: {
 			xml: "responseXML",
 			text: "responseText",
@@ -444,8 +470,8 @@ jQuery.extend({
 	// with both ajaxSettings and settings fields.
 	// If target is omitted, writes into ajaxSettings.
 	ajaxSetup: function( target, settings ) {
+		// 让默认参数options继承ajaxSettings对象
 		return settings ?
-
 			// Building a settings object
 			ajaxExtend( ajaxExtend( target, jQuery.ajaxSettings ), settings ) :
 
@@ -506,6 +532,7 @@ jQuery.extend({
 			// Default abort message
 			strAbort = "canceled",
 			// Fake xhr
+			// 模拟的XHR对象，不是原生的XHR，功能更强大
 			jqXHR = {
 				readyState: 0,
 
@@ -848,15 +875,23 @@ jQuery.extend({
 	},
 
 	getJSON: function( url, data, callback ) {
+		// ->get->ajax
+		// 限制请求的数据是json
 		return jQuery.get( url, data, callback, "json" );
 	},
 
 	getScript: function( url, callback ) {
+		//  ->get->ajax
+		// 限制请求内容是script脚本
 		return jQuery.get( url, undefined, callback, "script" );
 	}
 });
 
 jQuery.each( [ "get", "post" ], function( i, method ) {
+	// type返回数据类型
+	// url
+	// data请求传输的数据
+	// callback回调函数
 	jQuery[ method ] = function( url, data, callback, type ) {
 		// shift arguments if data argument was omitted
 		if ( jQuery.isFunction( data ) ) {
@@ -864,7 +899,7 @@ jQuery.each( [ "get", "post" ], function( i, method ) {
 			callback = data;
 			data = undefined;
 		}
-
+        //get 的请求也是调用ajax这个方法
 		return jQuery.ajax({
 			url: url,
 			type: method,
