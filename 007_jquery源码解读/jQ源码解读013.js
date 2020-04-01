@@ -247,8 +247,10 @@ ajaxLocParts = rurl.exec( ajaxLocation.toLowerCase() ) || [];
 function addToPrefiltersOrTransports( structure ) {
 
 	// dataTypeExpression is optional and defaults to "*"
+	// 函数科里化试下
+	// 
 	return function( dataTypeExpression, func ) {
-
+        //    判断dataType是否存在
 		if ( typeof dataTypeExpression !== "string" ) {
 			func = dataTypeExpression;
 			dataTypeExpression = "*";
@@ -279,6 +281,7 @@ function addToPrefiltersOrTransports( structure ) {
 function inspectPrefiltersOrTransports( structure, options, originalOptions, jqXHR ) {
 
 	var inspected = {},
+	// 判断是过滤还是分发操作
 		seekingTransport = ( structure === transports );
 
 	function inspect( dataType ) {
@@ -286,6 +289,7 @@ function inspectPrefiltersOrTransports( structure, options, originalOptions, jqX
 		inspected[ dataType ] = true;
 		jQuery.each( structure[ dataType ] || [], function( _, prefilterOrFactory ) {
 			var dataTypeOrTransport = prefilterOrFactory( options, originalOptions, jqXHR );
+			
 			if( typeof dataTypeOrTransport === "string" && !seekingTransport && !inspected[ dataTypeOrTransport ] ) {
 				options.dataTypes.unshift( dataTypeOrTransport );
 				inspect( dataTypeOrTransport );
@@ -537,6 +541,7 @@ jQuery.extend({
 				readyState: 0,
 
 				// Builds headers hashtable if needed
+				// 获取响应头信息
 				getResponseHeader: function( key ) {
 					var match;
 					if ( state === 2 ) {
@@ -593,6 +598,7 @@ jQuery.extend({
 
 				// Cancel the request
 				abort: function( statusText ) {
+					// 出错的时候调用
 					var finalText = statusText || strAbort;
 					if ( transport ) {
 						transport.abort( finalText );
@@ -603,6 +609,7 @@ jQuery.extend({
 			};
 
 		// Attach deferreds
+		// 添deffered到jqXHR，扩展jqXHR函数
 		deferred.promise( jqXHR ).complete = completeDeferred.add;
 		jqXHR.success = jqXHR.done;
 		jqXHR.error = jqXHR.fail;
@@ -611,6 +618,7 @@ jQuery.extend({
 		// Add protocol if not provided (#5866: IE7 issue with protocol-less urls)
 		// Handle falsy url in the settings object (#10093: consistency with old signature)
 		// We also use the url parameter if available
+
 		s.url = ( ( url || s.url || ajaxLocation ) + "" ).replace( rhash, "" ).replace( rprotocol, ajaxLocParts[ 1 ] + "//" );
 
 		// Alias method option to type as per ticket #12004
@@ -620,21 +628,29 @@ jQuery.extend({
 		s.dataTypes = jQuery.trim( s.dataType || "*" ).toLowerCase().match( core_rnotwhite ) || [""];
 
 		// A cross-domain request is in order when we have a protocol:host:port mismatch
+		// 跨域处理
+		// 默认没有
 		if ( s.crossDomain == null ) {
 			parts = rurl.exec( s.url.toLowerCase() );
+			// 判断是否跨域，协议、域名、端口号都相同
 			s.crossDomain = !!( parts &&
 				( parts[ 1 ] !== ajaxLocParts[ 1 ] || parts[ 2 ] !== ajaxLocParts[ 2 ] ||
 					( parts[ 3 ] || ( parts[ 1 ] === "http:" ? "80" : "443" ) ) !==
 						( ajaxLocParts[ 3 ] || ( ajaxLocParts[ 1 ] === "http:" ? "80" : "443" ) ) )
 			);
 		}
+		// 跨域要动态添加script的方法解决
 
 		// Convert data if not already a string
+		// 格式化数据
 		if ( s.data && s.processData && typeof s.data !== "string" ) {
 			s.data = jQuery.param( s.data, s.traditional );
 		}
 
 		// Apply prefilters
+		// 预处理器发送请求之前做处理
+		// 分发处理器
+		// 都是这个函数触发
 		inspectPrefiltersOrTransports( prefilters, s, options, jqXHR );
 
 		// If request was aborted inside a prefilter, stop there
@@ -646,14 +662,17 @@ jQuery.extend({
 		fireGlobals = s.global;
 
 		// Watch for a new set of requests
+		// 
 		if ( fireGlobals && jQuery.active++ === 0 ) {
 			jQuery.event.trigger("ajaxStart");
 		}
 
-		// Uppercase the type
+		// Uppercase the type 
+		// 请求方法转大写
 		s.type = s.type.toUpperCase();
 
 		// Determine if request has content
+
 		s.hasContent = !rnoContent.test( s.type );
 
 		// Save the URL in case we're toying with the If-Modified-Since
@@ -661,6 +680,7 @@ jQuery.extend({
 		cacheURL = s.url;
 
 		// More options handling for requests with no content
+		// 判断是get请求还是post请求
 		if ( !s.hasContent ) {
 
 			// If data is available, append data to url
@@ -671,6 +691,7 @@ jQuery.extend({
 			}
 
 			// Add anti-cache in url if needed
+			// 判断是否需要缓存
 			if ( s.cache === false ) {
 				s.url = rts.test( cacheURL ) ?
 
@@ -683,6 +704,9 @@ jQuery.extend({
 		}
 
 		// Set the If-Modified-Since and/or If-None-Match header, if in ifModified mode.
+		// 设置头信息
+		// 优化用户体验
+		// 数据没变变化尽量走缓存
 		if ( s.ifModified ) {
 			if ( jQuery.lastModified[ cacheURL ] ) {
 				jqXHR.setRequestHeader( "If-Modified-Since", jQuery.lastModified[ cacheURL ] );
@@ -870,7 +894,7 @@ jQuery.extend({
 				}
 			}
 		}
-
+		// 返回jqXHR，后继调用done()...
 		return jqXHR;
 	},
 
@@ -1077,9 +1101,11 @@ jQuery.ajaxSetup({
 
 // Handle cache's special case and global
 jQuery.ajaxPrefilter( "script", function( s ) {
+	// script标签时候不需要缓存
 	if ( s.cache === undefined ) {
 		s.cache = false;
 	}
+	// 跨域的时候要用get方法
 	if ( s.crossDomain ) {
 		s.type = "GET";
 		s.global = false;
@@ -1222,9 +1248,10 @@ jQuery.ajaxPrefilter( "json jsonp", function( s, originalSettings, jqXHR ) {
 		});
 
 		// Delegate to script
+		// 
 		return "script";
 	}
-});
+});  
 var xhrCallbacks, xhrSupported,
 	xhrId = 0,
 	// #5280: Internet Explorer will keep connections alive if we don't abort on unload
