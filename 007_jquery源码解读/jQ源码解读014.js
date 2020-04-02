@@ -1030,13 +1030,15 @@ jQuery.each( { Height: "height", Width: "width" }, function( name, type ) {
 // (function() {
 
 // The number of elements contained in the matched element set
+// 集合的长度
 jQuery.fn.size = function() {
 	return this.length;
 };
-
+// 
 jQuery.fn.andSelf = jQuery.fn.addBack;
 
 // })();
+// Commonjs 模块规范
 if ( typeof module === "object" && module && typeof module.exports === "object" ) {
 	// Expose jQuery as module.exports in loaders that implement the Node
 	// module pattern (including browserify). Do not create the global, since
@@ -1044,6 +1046,7 @@ if ( typeof module === "object" && module && typeof module.exports === "object" 
 	// upon in the Node module world.
 	module.exports = jQuery;
 } else {
+	// AMD异步模块规范
 	// Otherwise expose jQuery to the global object as usual
 	window.jQuery = window.$ = jQuery;
 
