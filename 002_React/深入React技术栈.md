@@ -30,7 +30,29 @@
 
   componentWillMount
 
+  render
+
+  componentDidmount
+
+
+ 挂载：
+
+ componentWillUnmount
+
+ 
+
+
   2、当组件接收新的数据时，即组件更新时
 
+
+    componentWillReceiveProps
+
+    shouldComponentUpdate
+
+    componentWillUpdate
+
+    render
+
+    componentDidUpdate
 
 
