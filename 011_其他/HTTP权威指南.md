@@ -191,47 +191,133 @@ HTTP报文是简单的格式化数据块
 
 ### 状态码
 
-100 说明收到了请求的初始部分，请客户端继续
+100 （Continue）说明收到了请求的初始部分，请客户端继续
 
-101 说明服务端正在根据客户端的指定，将协议切换成Update所列的协议
-
-====================
-
-200 请求没问题，实体的主体部分包含了所请求的资源
-
-201 用于创建服务器对象的请求
-
-202 请求已被接受，但服务器还未对其执行任何动作
+101 （Switching Protocols）说明服务端正在根据客户端的指定，将协议切换成Update所列的协议
 
 ====================
 
-203 实体首部包含的信息不是来自资源服务器，而是来自资源服务器的一个副本
+200 （OK）请求没问题，实体的主体部分包含了所请求的资源
 
-204 响应报文中包含若干首部和一个状态行，但没有实体的主题部分
+201 （Created）用于创建服务器对象的请求
 
-205 另一个主要用于浏览器的代码
+202 （Accepted）请求已被接受，但服务器还未对其执行任何动作
 
-206 成功执行了一个部分或Range请求
+203 （Non-Authoritative Infomation）实体首部包含的信息不是来自资源服务器，而是来自资源服务器的一个副本
+
+204 （No Content）响应报文中包含若干首部和一个状态行，但没有实体的主题部分
+
+205 （Reset Content）另一个主要用于浏览器的代码
+
+206 （Partial Content）成功执行了一个部分或Range请求
+
+====================
+
+300 （Multiple Choices）客户端请求一个实际指向多个资源的URL时返回这个状态码
+
+301 （Moved Permanetly）在请求的URL已被移除时使用
+
+302 （Found）在请求的URL已被移除时使用，但是顾客端应该使用Location首部给出的URL来临时定位资源
+
+303 （See Other）告知顾客端应该使用另一个URL来获取资源
+
+304 （Not Modified）顾客端可以通过所包含的请求首部，使其请求编程有条件的。
+
+305 （Use Proxy）用来说明必须通过一个代理来访问资源：代理的位置由Location给出
+
+306 （未使用） 当前未使用
+
+307 （Temporary Reditrect） 在请求的URL已被移除时使用；但客户端应该使用Location首部给出的URL来临时定位资源
 
 ====================
 
-300 客户端请求一个实际指向多个资源的URL时返回这个状态码
+400 （Bad Request） 用于告知客户端他发送了一个错误的请求
 
-301 在请求的URL已被移除时使用
+401 （Unauthorized）权限认证出错
 
-302 在请求的URL已被移除时使用，但是顾客端应该使用Location首部给出的URL来临时定位资源
+402 （Payment Required） 保留状态码
 
-303 告知顾客端应该使用另一个URL来获取资源
+403 （Forbidden） 服务器拒绝请求
 
-304 顾客端可以通过所包含的请求首部，使其请求编程有条件的。
-
-305 用来说明必须通过一个代理来访问资源：代理的位置由Location给出
-
-306 当前未使用
-
-307 在请求的URL已被移除时使用；但客户端应该使用Location首部给出的URL来临时定位资源
+404 （Not Found） 用于说明服务器无法找到锁清秋的URL
 
 ====================
+
+500 （Internal Server Error） 服务器错误
+
+501 （Not Implemented） 使用了服务器不支持的请求方法
+
+502 （Bad Gateway） 无法连接到其父网关
+
+503 （Service Unavailable） 服务器无法为其提供服务
+
+504（Gateway Timeout） 相应超时了
+
+505 （HTTP Service Not Supported） 协议版本不支持
+
+
+
+### 3.5 首部
+
+1、通用首部
+
+Date
+Connection
+通用缓存首部     Cache-Control  Pragma
+
+
+2、请求首部
+
+Accept：
+Accept
+Accept-Charset
+Accept-Encoding
+Accept-Language
+TE
+
+
+From
+Host
+Referer
+Usr-Agent
+
+
+
+
+3、响应首部
+
+Server
+
+4、实体首部
+
+用来描述HTTP报文的负荷
+
+Allow
+Location
+
+
+Content-type：
+
+
+5、扩展首部
+
+
+
+
+
+
+
+# 第四章  连接管理
+
+## TCP连接
+
+
+HTTP       应用层
+TCP        传输层
+IP         网络层
+网络接口    数据链路层 
+
+
 
 
       
