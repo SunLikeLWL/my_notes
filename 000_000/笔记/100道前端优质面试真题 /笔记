@@ -1,0 +1,730 @@
+# 100道前端优质面试题
+
+
+## Ajax   strech  axios
+
+Ajax
+异步请求的一门技术
+
+
+strech
+浏览器提供的具体API
+
+axios
+异步请求的库
+
+
+
+## 防抖&节流
+
+防抖：
+
+```js
+
+function debounce(fn,delay){
+    let timer = 0;
+    if(!timer){
+        timer = setTimeout(()=>{
+            fn.apply(this,arguments)
+            timer = 0
+        },delay)
+    }
+}
+
+
+```
+
+
+节流：
+function debounce(fn,delay){
+    let timer = 0;
+    if(timer){
+         return 
+    }
+    timer = setTimeout(()=>{
+            fn.apply(this,arguments)
+            timer = 0
+      },delay)
+}
+
+```
+
+
+
+## px %  rem
+
+
+
+##  自己有哪些缺点
+
+1、我觉得自己在xxx方面存在不足（只能说技术上的不足，不能说自己核心技术栈）
+2、但我已经意识到，并开学习xxx
+3、我估计会在xxx时间把这块补齐
+
+
+## 学习一门语言先要做什么
+
+1、了解语言的优势和使用场景
+2、语法
+3、API和内置模块
+4、常用的第三方库
+5、开发环境和调试工具
+6、线上环境和开发过程
+
+
+## codereview
+
+1、代码规范（eslint不能检察全、如变量命名、代码语义）
+2、重复的代码要抽离、复用
+3、单个函数内容过长，需要拆分
+4、算法复杂度是否可用，是否课继续优化
+5、是否有安全漏洞
+6、扩展性如何
+7、是否与现有功能重复
+8、是否有完善的单元测试
+9、组件设计是否合理
+
+
+
+## 是否看过红宝石书
+
+
+
+
+
+## 软技能
+
+1、考察
+沟通能力
+学习能力
+项目参与能力
+
+2、
+
+
+
+
+# H5实现图片懒加载
+
+```js
+
+function mapImageAndTryLoad(){
+    const images = document.querySelectorAll('img[data-src]')
+    if(images.length === 0) return 
+    images.forEach(img =>{
+        const resct = img.getBoundingClientRect()
+        img.src  = img.dataset.src
+        img.removeAttribute('data-src')
+    })
+}
+
+window.addEventLister('scroll',throttle(()=>{
+   mapImageAndTryLoad()
+},100))
+
+
+
+
+```
+
+
+
+# RBAC Role-based access control
+
+基于角色的访问控制
+
+
+
+
+# Vue  $refs   $parent
+父子组件通信
+
+
+
+
+# Vue provide inject
+
+
+
+# js 严格模式
+
+1、全局变量必须先声明
+2、禁止使用with
+3、创建eval作用域
+4、禁止this指向window
+5、函数参数不能重名
+
+
+
+# 跨域为何要发送方options请求
+
+1、浏览器同源策略
+2、同源策略一般限制ajax网络请求，不能跨域请求server
+3、不会限制link image script  iframe 加载第三方资源
+
+
+1、options请求，是跨域请求之前的预检查
+2、浏览器自行发起，无需我们干预
+3、不会影响实际的功能
+
+
+# 知识深度
+
+1、探测技术天花板，看技术潜力
+2、入职定级的重要参考标准
+3、希望和有技术深度的工程师共事
+4、飞应用层面，深入到原理层面
+5、js相关原理
+6、Vue React 等框架原理
+
+
+
+
+1、技术深度，有1-2方面即可。深，就是不能广
+2、技术深度题目不过关，不一定面试不通过
+
+
+
+# JS内存泄露 如何检测  场景有哪些
+
+1、什么是垃圾回收？
+
+引用计数
+
+标记清除
+
+
+# 浏览器和nodejs的事件循环有什么区别？
+
+## 单线程和异步
+
+js单线程
+浏览器中hs执行和DOM渲染公共一个线程
+异步
+
+
+宏任务&微任务
+
+
+
+
+
+# vdom
+
+Virtual DOM，虚拟DOM
+
+用js对象模拟DOM节点数据
+
+由React 最先推广使用
+
+
+
+
+# for  forEach
+
+for更快
+forEach每次都要创建一个函数
+
+
+
+# 进程&线程
+
+
+1、进程 process     线程thread
+
+2、进程，OS进行资源分配和调度的最小单位，有独立内存空间
+
+3、OS进行运算调度的最小单位，共享进程内存空间
+
+4、JS是单线程的，但可以开启多进程执行，如WebWorker
+
+
+
+### 为何需要多进程
+
+1、多核CPU，更适合处理多进程
+2、内存较大，多进程才能更好的利用
+3、压榨机器资源
+
+
+
+### 什么是JS Bridge
+
+1、JS无法直接调用native API 
+2、需要通过一些特定的“格式”来调用
+3、这些“格式”就统称为JS-Bridge，例如微信JSSDK
+
+
+
+
+# requestIdleCallback  和 requestAnimationFrame
+
+
+
+### requestIdleCallback
+
+
+由 React fiber引起的关注
+
+1、组件树转换为链表，可分段渲染
+2、渲染时可以暂停，去执行其他高优任务，空闲时再继续渲染
+3、如何判断空闲
+
+
+
+### requestAnimationFrame
+
+
+
+
+### 区别
+
+1、requestAnimationFrame每次渲染完都会执行，高优
+2、requestIdleCallback空闲时才执行，低优
+
+
+
+
+# Vue生命周期
+
+
+
+
+# Vue2 Vue3 React diff算法有何区别
+
+
+
+### diff
+
+1、diff算法很早就有
+2、diff算法应用广泛，例如github的pull request中的代码diff
+3、如果严格diff两个树，时间复杂度O(n^3)，不可用
+
+Vue2 双端比较
+Vue3 最长递增子序列
+React 仅右侧
+
+
+循环时必须使用key？
+1、vdom diff算法根据key判断元素是否需要删除
+2、匹配key，则只移动元素-性能较好
+3、未匹配key，则删除重建-性能较好
+
+
+# Vue-router 三种模式
+
+
+Hash
+
+WebHistory
+
+abstract （MemoryHistory）
+
+
+
+
+
+
+
+# 知识广度
+
+
+为何考察
+
+1、前端设计的范围越来越广泛
+
+2、企业需要全能人才
+
+
+考察点
+
+1、移动端相关知识
+2、HTTP Socket等网络相关知识
+3、Nodejs
+
+注意
+
+1、不会从0讲起，基础不熟悉的可以向导师提问
+2、广，则不能深
+
+
+面试题
+
+1、HTTP和WebSocket有什么区别
+2、前端攻击的常用手段有哪些？如何预防
+3、请描述Koa2洋葱模型
+
+
+
+
+
+# 移动端H5 click 有300ms延迟，如何解决
+
+
+背景：double tap to zoom
+
+
+### FastClick原理
+
+1、监听touchend事件（touchstart touchend会先于click触发）
+2、使用自定义DOM事件模拟一个click事件
+3、把默认的click事件（300ms之后触发）禁止掉
+
+
+### viewport    width = device-width
+
+
+
+
+# cookie
+
+1、HTTP无状态，每次请求都要带cookie，以便识别身份
+2、服务端也可以向客户端set-cookie，cookie大小限制4kb
+3、默认有跨域限制：不可跨域共享、传递cookie
+
+
+
+### cookie本地存储
+
+1、HTML5之前cookie常被用于本地存储
+2、HTML5之后推出的localStorage和sessionStorage
+
+
+### 现代浏览器禁止第三方cookie
+
+1、和跨域限制不同。这里是：禁止网页引入的第三方JS设置cookie
+2、打击第三方广告，保护用户隐私
+3、新增属性 samSit：strict/lax/None； 值可以自己选择
+
+
+
+
+### cookie 和session
+
+1、cookie用于登录验证，存储用户标识
+2、session 在服务端，存储用户详细信息，和cookie信息一一对应
+3、cookie + session 是常见登录验证解决方案
+
+
+
+
+
+# token vs cookie
+
+1、cookie是HTTP规范，而token是自定义传递
+2、cookie会默认被浏览器存储，而token需要自己存储
+3、token默认没有跨域限制
+
+
+
+### JWT json web token
+
+1、前端发起登录，后端验证成功后，返回一个加密token
+2、前端自行存储这个token
+3、以后访问服务器接口，都带着这个token，作为用户信息
+
+
+
+# session和JWT那个更好
+
+seesion优点
+
+1、原理简单，易于学习
+2、用户信息存储在服务端，可快速封禁某个用户
+
+
+session缺点
+
+1、占用服务端内存，硬件成本高
+2、多进程，多服务时，不好同步--需使用第三方缓存，如redis
+3、默认有跨域限制
+
+
+JWT优点
+
+1、不占用服务端内存
+2、多进程、多服务器也不受影响
+没有跨域限制
+
+JWT缺点
+
+1、用户信息存在客户端，无法快速封禁某用户
+2、万一服务端密钥被泄露，则用户信息全部丢失
+3、token体积一般大于cookie，会增加请求的数据量
+
+
+
+答案
+
+1、如有严格管理用户信息的需求（保密、快速封禁）推荐session
+2、如没有特殊要求，则使用JWT
+
+
+
+# UDP协议和HTTP协议的区别
+
+### UDP协议
+
+1、无连接，无断开
+2、不稳定传输，但效率高
+3、如视频会议、语音通话
+
+
+
+答案
+
+1、HTTP是应用层，TCP UDP是传输层
+2、TCP有连接，有断开，稳定传输
+3、UDP无连接，无断开，不稳定传输，但效率高
+
+
+
+
+# HTTP 1.0 1.1 2.0有啥区别
+
+
+1.0
+
+1、最基础的HTTP协议
+2、支持基本的get post方法
+
+
+1.1
+
+1、增加了缓存策略cache-control E-tag等
+2、支持长连接 Connnection:keep-alive，一次TCP连接多次请求
+3、断点续传，状态吗206
+4、支持新的方法PUT DELETE等，可以用restful API
+
+
+2.0
+
+1、可以压缩header，减少体积
+2、多路复用，一次TCP连接中可以多个HTTP请求
+3、服务端推送
+
+
+
+
+# 什么是HTTPS中间人攻击？如何预防？
+
+
+HTTPS加密传输
+
+
+1、HTTP明文传输
+2、HTTPS加密传输 HTTP + TLS/SSL
+
+
+
+
+# srcipt标签 中defer和async的却别
+
+
+
+
+# prefetch和dns-prefetch有什么区别
+
+link标签 rel属性
+
+### preload和prefetch
+
+
+
+
+1、preload资源在当前页面使用，会优先加载
+2、prefetch资源在未来页面使用，空闲时加载
+
+
+### dns-prefetch和preconnect
+
+1、dns-prefetch即DNS预查询
+2、preconnect即DNS预连接
+
+
+
+
+# 前端攻击&预防
+
+### XSS
+
+1、Cross Sit Script 跨站脚本攻击
+2、手段：黑客将js代码插入到网页内容中，渲染时执行JS代码
+3、预防：特殊字符替换
+
+
+
+### CSRF
+
+1、Cross Site Request Forgery跨站请求伪造
+2、手段：黑客诱导用户访问另一个网站的接口，伪造请求
+3、预防：严格的跨域限制+验证码机制
+
+
+
+过程
+
+1、用户登录了A网站，有了cookie
+2、黑客诱导用户到B网站，并发起A网站的请求
+3、A网站的API发现有cookie，认为是用户自己的操作
+
+预防手段
+
+1、严格的跨域请求限制，如判断referrer
+2、为cookie设置SameSite，禁止跨域传递cookie
+3、关键接口短信验证
+
+
+### 点击劫持
+
+1、Click Jacking
+2、手段：诱导界面上蒙上一个透明的iframe，诱导用户点击
+3、预防：让iframe不能跨域加载
+
+
+
+
+### DDoS
+
+
+1、Distribute denial-of-service分布式拒绝服务
+2、手段：分布式、大规模的流量访问，使服务器瘫痪
+3、预防：软件层不好做，需要硬件预防（如阿里云WAF）
+
+
+
+
+### SQL注入
+
+1、手段：黑客提交内容时写入SQL语句，破话数据库
+2、预防：处理输入内容，替换特殊字符
+
+
+
+
+# Websocket和HTTP区别
+
+Websocket
+
+1、支持端对端通讯
+2、可以由client发起，也可以由server发起
+3、用于：消息通知，直播间讨论区，聊天室，协同编辑
+
+
+连接过程
+
+1、先发起一个HTTP请求
+2、成功之后升级到Websocket协议，再通讯
+
+
+
+区别：
+
+1、ws协议名是ws:// ，可双端发起请请求
+2、ws没有跨域限制
+3、通过send和onmessage通讯（http通过req和res）
+
+
+
+# ws 和 http 长轮询的区别
+
+1、http长轮询：客户端发起请求，服务端堵塞，不会立即返回
+2、ws：客户端可发起请求，服务端也可以发起请求
+
+
+
+
+# 从输入url到页面呈现
+
+步骤
+
+1、网络请求
+
+2、解析
+
+3、渲染
+
+
+
+### 网络请求
+
+1、DNS查询，简历tcp连接
+
+2、浏览器发起http请求
+
+3、收到请求响应，得到HTML源代码
+
+### 继续网络请求
+
+1、解析HTML过程中，遇到静态资源还会继续发起网络请求
+
+2、js css 图片视频
+
+
+### 解析
+
+
+1、
+
+
+
+
+# 重绘 &重排
+
+
+重排 reflow
+1、重新计算尺寸和布局，可能会影响其他元素的位置
+2、如元素高度增加，可能会使相邻元素位置下移
+
+
+
+重绘 repaint
+
+1、元素外观改变，如颜色、背景色
+
+2、但元素的  尺寸、定位不变，不会影响其他元素的位置
+
+
+
+
+### 减少重排的方法
+
+1、集中修改样式，或直接切换css class
+
+2、修改之前先设置display：none，脱离文档流
+
+3、使用BFC特性，不影响其他元素位置
+
+4、频繁触发的使用节流防抖
+
+5、使用createDocumentFragment批量操作DOM
+
+6、优化动画，使用css3 和 requestAnimationFrame
+
+
+
+
+
+# 如何实现多标签页通讯
+
+
+
+Websocket
+
+
+localStorage
+
+
+shareWorker
+
+
+
+# 网页和iframe之间如何通讯
+
+
+iframe.contentWindow.postMessage('','*')
+
+
+ 
+
+
