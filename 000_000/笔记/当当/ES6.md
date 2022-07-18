@@ -233,3 +233,117 @@ function spwan(genF){
 也就是说，修饰器本质就是编译时执行的函数
 
 
+
+
+
+修饰器只能用于类和类的方法，不能用于函数，因为函数存在变函数提升
+
+
+
+# mixin
+
+
+
+
+
+
+
+# Module
+
+
+### 严格模式
+
+
+1、变量必须声明后使用
+2、函数的参数不能有同名属性，否则报错
+3、不能使用with语句
+4、不能对只读属性赋值，否则报错
+5、不能使用前缀0表示八进制数，否则报错
+6、不能删除不可删除的属性，否则报错
+7、不能删除变量 delete prop，会报错，只能删除属性delete global[prop]
+8、eval不会再他的外层作用域引入变量
+9、eval和arguments不能被重新赋值
+10、arguments不会自动反映函数参数的变化
+11、不能使用arguments.callee
+12、不能使用arguments.caller
+13、禁止this指向全局对象
+14、不能使用fn.caller和fn.arguments获取函数调用的堆栈你
+15、增加了保留字(protected/static/interface)
+
+
+# ##################################
+
+# 简介
+ 
+ES是JS的规范，JS是ES的一种实现
+
+### 审批流程
+
+展示阶段
+征求意见阶段
+草案阶段
+候选阶段
+定案阶段
+
+
+
+
+# 字符串扩展
+
+codePointAt
+
+fromCharCode
+
+fromCodePoint
+
+
+
+
+
+# 正则
+
+
+match
+replace
+search
+split
+
+
+
+# 数组扩展
+
+
+isFinite
+isNaN
+parseInt
+parseFloat
+isInterger
+EPSILON
+isSageInterger
+trunc
+sign
+cbrt
+clz
+imul
+fround
+hypot
+
+
+
+
+### 箭头函数
+
+1、函数体内this对象就是定义时所在的对象，而不是使用时所在的对象
+
+2、不可以当做构造函数。也就是说，不能使用new命令，否则抛出一个错误
+
+3、不可以使用arguments对象，该对象在函数体内不存在。如果要用，可以用rest参数替代
+
+4、不可以使用yield命令，因为箭头函数不能作为Generatorar函数
+
+
+
+
+
+
+
